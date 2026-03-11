@@ -2,6 +2,7 @@
   "name": "TrayForm Pro",
   "short_name": "TrayForm Pro",
   "description": "Cutting template for perforated sheet metal cable trays — by Nexel",
+  "id": "com.nexel.trayformpro",
   "start_url": "/trayform-pro/index.html",
   "scope": "/trayform-pro/",
   "display": "standalone",
