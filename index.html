@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrayForm Pro — Nexel</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+        /* ══ THÈMES ══ */
+        :root, [data-theme="light"] {
+            --blue-dark:    #0369a1;
+            --blue-mid:     #0284c7;
+            --blue-light:   #38bdf8;
+            --blue-pale:    #7dd3fc;
+            --blue-bg:      #f0f9ff;
+            --blue-border:  #bae6fd;
+            --bg-body:      #f8fafc;
+            --bg-card:      #ffffff;
+            --bg-input:     #f8fafc;
+            --bg-input-focus: #ffffff;
+            --bg-step:      #f0f9ff;
+            --text-main:    #1e293b;
+            --text-muted:   #475569;
+            --text-label:   #94a3b8;
+            --border-card:  #bae6fd;
+            --border-input: #e2e8f0;
+            --gray-100:     #f1f5f9;
+            --gray-200:     #e2e8f0;
+            --shadow-sm:    0 1px 3px rgba(2,132,199,0.12);
+            --shadow-md:    0 4px 16px rgba(2,132,199,0.15);
+            --shadow-lg:    0 8px 32px rgba(2,132,199,0.18);
+        }
+        [data-theme="dark"] {
+            --blue-dark:    #38bdf8;
+            --blue-mid:     #38bdf8;
+            --blue-light:   #7dd3fc;
+            --blue-pale:    #0284c7;
+            --blue-bg:      #0c1a2e;
+            --blue-border:  #1e3a5f;
+            --bg-body:      #0f172a;
+            --bg-card:      #1e293b;
+            --bg-input:     #0f172a;
+            --bg-input-focus: #1e293b;
+            --bg-step:      #0c1a2e;
+            --text-main:    #f1f5f9;
+            --text-muted:   #94a3b8;
+            --text-label:   #64748b;
+            --border-card:  #1e3a5f;
+            --border-input: #334155;
+            --gray-100:     #1e293b;
+            --gray-200:     #334155;
+            --shadow-sm:    0 1px 3px rgba(0,0,0,0.4);
+            --shadow-md:    0 4px 16px rgba(0,0,0,0.4);
+            --shadow-lg:    0 8px 32px rgba(0,0,0,0.5);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* ══ TOPBAR ══ */
+        .topbar {
+            background: var(--bg-card);
+            border-bottom: 2px solid var(--blue-border);
+            padding: 0 16px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .topbar-left { display: flex; align-items: center; gap: 10px; }
+
+        /* Bouton 3 points */
+        .menu-btn {
+            width: 36px; height: 36px;
+            border: none;
+            background: var(--gray-100);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 4px;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+        .menu-btn:hover { background: var(--blue-border); }
+        .menu-btn span {
+            display: block;
+            width: 4px; height: 4px;
+            background: var(--blue-mid);
+            border-radius: 50%;
+        }
+
+        /* Dropdown */
+        .dropdown {
+            position: absolute;
+            top: 56px; left: 12px;
+            background: var(--bg-card);
+            border: 1.5px solid var(--blue-border);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            min-width: 210px;
+            z-index: 200;
+            display: none;
+            overflow: hidden;
+            transition: background 0.3s;
+        }
+        .dropdown.open { display: block; }
+        .dropdown-section {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .dropdown-section:last-child { border-bottom: none; }
+        .dropdown-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-label);
+            padding: 6px 16px 4px;
+        }
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: background 0.15s;
+        }
+        .lang-option:hover { background: var(--blue-bg); color: var(--blue-mid); }
+        .lang-option.active { background: var(--blue-bg); color: var(--blue-mid); font-weight: 700; }
+        .lang-option .flag { font-size: 18px; }
+        .lang-option .check { margin-left: auto; color: var(--blue-mid); font-size: 14px; }
+
+        /* Toggle dark mode dans le menu */
+        .menu-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: background 0.15s;
+        }
+        .menu-toggle-row:hover { background: var(--blue-bg); color: var(--blue-mid); }
+        .toggle-switch {
+            width: 38px; height: 22px;
+            background: var(--gray-200);
+            border-radius: 11px;
+            position: relative;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+        .toggle-switch.on { background: var(--blue-mid); }
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px; left: 3px;
+            width: 16px; height: 16px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        .toggle-switch.on::after { transform: translateX(16px); }
+
+        /* Lien contact */
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: background 0.15s;
+            cursor: pointer;
+        }
+        .menu-link:hover { background: var(--blue-bg); color: var(--blue-mid); }
+
+        /* Logo topbar */
+        .topbar-logo { display: flex; align-items: center; gap: 8px; }
+        .topbar-logo svg { width: 32px; height: 32px; }
+        .topbar-logo-text { font-size: 16px; font-weight: 800; color: var(--blue-dark); letter-spacing: 0.5px; }
+        .topbar-logo-text span { color: var(--blue-light); font-weight: 500; }
+
+        /* Switcher unités */
+        .unit-switcher {
+            display: flex;
+            background: var(--gray-100);
+            border-radius: 8px;
+            padding: 3px; gap: 2px;
+        }
+        .unit-btn {
+            padding: 5px 10px;
+            border: none; border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; font-weight: 700;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-label);
+            transition: all 0.2s;
+        }
+        .unit-btn.active { background: var(--blue-mid); color: white; box-shadow: 0 1px 4px rgba(2,132,199,0.3); }
+
+        /* ══ CONTENU ══ */
+        .content { padding: 14px; max-width: 700px; margin: 0 auto; }
+
+        /* CARDS */
+        .card {
+            background: var(--bg-card);
+            border: 1.5px solid var(--border-card);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow-sm);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .card-title {
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            color: var(--blue-mid);
+            border-bottom: 1.5px solid var(--blue-bg);
+            padding-bottom: 10px; margin-bottom: 14px;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        /* ══ GRILLE 2×2 FIGURES ══ */
+        .figure-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .figure-block {
+            background: var(--bg-input);
+            border: 2px solid var(--border-input);
+            border-radius: 12px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .figure-block:hover { border-color: var(--blue-light); background: var(--blue-bg); }
+        .figure-block.active {
+            border-color: var(--blue-mid);
+            background: var(--blue-bg);
+            box-shadow: 0 0 0 3px rgba(2,132,199,0.15);
+        }
+        .figure-block-title {
+            font-size: 12px; font-weight: 700;
+            color: var(--blue-dark);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .figure-block select {
+            width: 100%;
+            padding: 8px 10px;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border-input);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px; font-weight: 600;
+            appearance: none; -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%230284c7' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 28px;
+            cursor: pointer;
+        }
+        .figure-block select:focus {
+            border-color: var(--blue-mid);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(2,132,199,0.12);
+        }
+        .figure-block-badge {
+            position: absolute;
+            top: 8px; right: 8px;
+            width: 8px; height: 8px;
+            background: var(--blue-mid);
+            border-radius: 50%;
+            display: none;
+        }
+        .figure-block.active .figure-block-badge { display: block; }
+
+        /* FORM */
+        .group { margin-bottom: 12px; }
+        label {
+            font-size: 11px; font-weight: 600;
+            letter-spacing: 0.8px; text-transform: uppercase;
+            color: var(--text-label);
+            display: block; margin-bottom: 6px;
+        }
+        select.main-select, input[type="number"] {
+            width: 100%;
+            padding: 11px 14px;
+            background: var(--bg-input);
+            border: 1.5px solid var(--border-input);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 15px; font-weight: 600;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            appearance: none; -webkit-appearance: none;
+        }
+        select.main-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230284c7' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+        select.main-select:focus, input:focus {
+            border-color: var(--blue-mid);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(2,132,199,0.12);
+            background: var(--bg-input-focus);
+        }
+        .input-row { display: flex; gap: 10px; }
+        .input-row > div { flex: 1; }
+        .input-row input { width: 100%; text-align: center; }
+        .input-label {
+            font-size: 10px; color: var(--text-label);
+            text-align: center; margin-top: 4px;
+            font-family: 'JetBrains Mono', monospace; font-weight: 600;
+        }
+
+        #error-msg {
+            display: none;
+            background: #fef2f2; border: 1.5px solid #fecaca;
+            color: #dc2626; border-radius: 8px;
+            padding: 10px 14px; font-size: 13px;
+            margin-bottom: 12px; font-weight: 500;
+        }
+        [data-theme="dark"] #error-msg { background: #2d1515; border-color: #7f1d1d; color: #fca5a5; }
+
+        #angleGroup {
+            display: none;
+            background: #fff7ed; border: 1.5px solid #fed7aa;
+            border-radius: 10px; padding: 12px;
+        }
+        [data-theme="dark"] #angleGroup { background: #1c1308; border-color: #78350f; }
+        #angleGroup label { color: #c2410c; }
+        #angleGroup input { border-color: #fed7aa; }
+        #secondaryGroup { display: none; }
+        #obstacleGroup {
+            display: none;
+            background: #fefce8; border: 1.5px solid #fde68a;
+            border-radius: 10px; padding: 12px;
+        }
+        [data-theme="dark"] #obstacleGroup { background: #1c1a05; border-color: #713f12; }
+        #obstacleGroup label { color: #92400e; }
+
+        /* SVG */
+        .svg-area {
+            background: var(--bg-input);
+            border: 1.5px solid var(--blue-border);
+            border-radius: 10px; padding: 10px;
+            overflow: hidden;
+        }
+        .svg-area svg { width: 100%; height: auto; display: block; }
+        .svg-scroll { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; border-radius: 8px; }
+        #plan-svg svg, #plan2-svg svg { min-width: 900px; }
+
+        /* LEGEND */
+        .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); font-weight: 500; }
+        .box-red { width:14px; height:14px; background: repeating-linear-gradient(45deg,#ef4444,#ef4444 2px,#fca5a5 2px,#fca5a5 4px); border-radius:3px; flex-shrink:0; }
+        .box-green { width:14px; height:14px; background:#10b981; border-radius:3px; flex-shrink:0; }
+        .box-blue { width:18px; height:3px; border-top:3px dashed var(--blue-mid); flex-shrink:0; }
+
+        /* BOUTON IMPRIMER */
+        .btn-print {
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, var(--blue-mid), var(--blue-dark));
+            border: none; border-radius: 10px;
+            color: white; font-family: 'Inter', sans-serif;
+            font-size: 15px; font-weight: 700; letter-spacing: 0.5px;
+            cursor: pointer; margin-bottom: 14px;
+            transition: opacity 0.2s, transform 0.1s;
+            box-shadow: var(--shadow-md);
+        }
+        .btn-print:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* STEPS */
+        .step {
+            display: flex; align-items: flex-start; gap: 12px;
+            margin-bottom: 10px; padding: 12px;
+            background: var(--bg-step);
+            border: 1px solid var(--blue-border);
+            border-radius: 10px;
+        }
+        .step:last-child { margin-bottom: 0; }
+        .step-number {
+            background: var(--blue-mid); color: white;
+            font-weight: 700; width: 24px; height: 24px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; flex-shrink: 0; font-size: 12px; margin-top: 1px;
+        }
+        .step-text { font-size: 13px; line-height: 1.6; color: var(--text-muted); }
+        .step-text strong { color: var(--blue-dark); }
+
+        /* SUPPORT */
+        /* DIMENSIONS */
+        .dims-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+        }
+        @media (max-width: 480px) { .dims-grid { grid-template-columns: 1fr; } }
+        .dim-row {
+            display: flex; flex-direction: column; gap: 2px;
+            background: var(--blue-bg); border: 1.5px solid var(--blue-border);
+            border-radius: 10px; padding: 12px 14px;
+        }
+        .dim-label {
+            font-size: 11px; font-weight: 700; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.06em;
+        }
+        .dim-value {
+            font-size: 22px; font-weight: 900; color: var(--blue-dark);
+            font-family: 'JetBrains Mono', monospace; letter-spacing: -0.01em;
+        }
+        .dim-note {
+            font-size: 11px; color: var(--text-muted); margin-top: 2px;
+        }
+
+        /* EPI WARNING */
+        .epi-warning {
+            display: flex; align-items: flex-start; gap: 14px;
+            background: #fefce8; border: 2px solid #f59e0b;
+            border-left: 6px solid #f59e0b;
+            border-radius: 12px; padding: 16px 18px;
+            margin-bottom: 8px;
+        }
+        [data-theme="dark"] .epi-warning {
+            background: #1c1408; border-color: #d97706;
+            border-left-color: #f59e0b;
+        }
+        .epi-icon { font-size: 28px; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+        .epi-content { display: flex; flex-direction: column; gap: 8px; }
+        .epi-title {
+            font-size: 14px; font-weight: 800; color: #92400e; letter-spacing: 0.01em;
+        }
+        [data-theme="dark"] .epi-title { color: #fcd34d; }
+        .epi-items { display: flex; flex-wrap: wrap; gap: 10px; }
+        .epi-item {
+            display: flex; align-items: center; gap: 5px;
+            background: #fef3c7; border: 1.5px solid #fbbf24;
+            border-radius: 8px; padding: 5px 12px;
+            font-size: 13px; font-weight: 700; color: #78350f;
+        }
+        [data-theme="dark"] .epi-item {
+            background: #2d1f00; border-color: #d97706; color: #fde68a;
+        }
+
+        .support-card {
+            background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+            border-radius: 14px; padding: 20px;
+            margin-bottom: 14px; color: white;
+            text-align: center; box-shadow: var(--shadow-lg);
+            position: relative; overflow: hidden;
+        }
+        .support-card::before { content:''; position:absolute; top:-40px; right:-40px; width:120px; height:120px; background:rgba(255,255,255,0.06); border-radius:50%; }
+        .support-card::after  { content:''; position:absolute; bottom:-30px; left:-30px; width:90px; height:90px; background:rgba(255,255,255,0.05); border-radius:50%; }
+        .support-icon { font-size: 32px; margin-bottom: 8px; }
+        .support-title { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+        .support-subtitle { font-size: 13px; opacity: 0.85; margin-bottom: 16px; line-height: 1.5; }
+        .support-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .support-btn {
+            padding: 10px 18px; border-radius: 8px;
+            font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700;
+            cursor: pointer; border: none; transition: all 0.2s;
+            text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .support-btn-primary { background: white; color: #0369a1; }
+        .support-btn-primary:hover { background: #f0f9ff; transform: translateY(-1px); }
+        .support-btn-secondary { background: rgba(255,255,255,0.15); color: white; border: 1.5px solid rgba(255,255,255,0.3); }
+        .support-btn-secondary:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
+
+        /* MODAL CONTACT */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.5); z-index: 300;
+            align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--bg-card);
+            border-radius: 16px; padding: 24px;
+            width: 100%; max-width: 400px;
+            box-shadow: var(--shadow-lg);
+            border: 1.5px solid var(--border-card);
+        }
+        .modal-title {
+            font-size: 18px; font-weight: 800;
+            color: var(--blue-dark); margin-bottom: 6px;
+        }
+        .modal-sub {
+            font-size: 13px; color: var(--text-muted);
+            margin-bottom: 20px; line-height: 1.5;
+        }
+        .modal-contact-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px; border-radius: 10px;
+            background: var(--blue-bg);
+            border: 1.5px solid var(--blue-border);
+            margin-bottom: 10px; text-decoration: none;
+        }
+        .modal-contact-item:last-of-type { margin-bottom: 0; }
+        .modal-contact-icon { font-size: 22px; flex-shrink: 0; }
+        .modal-contact-text { font-size: 13px; font-weight: 600; color: var(--blue-dark); }
+        .modal-contact-desc { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+        .modal-close {
+            width: 100%; margin-top: 16px;
+            padding: 11px; border: none; border-radius: 8px;
+            background: var(--gray-100); color: var(--text-muted);
+            font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .modal-close:hover { background: var(--gray-200); }
+
+        /* FOOTER */
+        .footer {
+            text-align: center; padding: 16px;
+            font-size: 11px; color: var(--text-label);
+            border-top: 1px solid var(--gray-200); margin-top: 6px;
+        }
+        .footer strong { color: var(--blue-mid); }
+
+        /* OVERLAY menu */
+        .overlay { display: none; position: fixed; inset: 0; z-index: 150; }
+        .overlay.open { display: block; }
+
+        @media print {
+            .topbar, .btn-print, #controls-panel, #preview-container,
+            #steps-container, .support-card, .footer,
+            .dropdown, .modal-overlay { display: none !important; }
+            body { background: white; }
+            .card { border: 1px solid #ccc; box-shadow: none; }
+            #plan-svg svg { min-width: unset; width: 100%; }
+            .svg-scroll { overflow: visible; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+<!-- MODAL CONTACT -->
+<div class="modal-overlay" id="contactModal">
+    <div class="modal">
+        <div class="modal-title" id="contact-title">Nous contacter</div>
+        <div class="modal-sub" id="contact-sub">Une question, un bug ou une suggestion ? On vous répond rapidement.</div>
+        <a class="modal-contact-item" href="/cdn-cgi/l/email-protection#d8bbb7b6acb9bbac98b6bda0bdb4f6b9a8a8">
+            <div class="modal-contact-icon">✉️</div>
+            <div>
+                <div class="modal-contact-text"><span class="__cf_email__" data-cfemail="8fece0e1fbeeecfbcfe1eaf7eae3a1eeffff">[email&#160;protected]</span></div>
+                <div class="modal-contact-desc" id="contact-email-desc">Support & questions générales</div>
+            </div>
+        </a>
+        <a class="modal-contact-item" href="https://buymeacoffee.com/nexel" target="_blank" rel="noopener">
+            <div class="modal-contact-icon">☕</div>
+            <div>
+                <div class="modal-contact-text">buymeacoffee.com/nexel</div>
+                <div class="modal-contact-desc" id="contact-bmc-desc">Messages & suggestions</div>
+            </div>
+        </a>
+        <button class="modal-close" id="contact-close" onclick="closeContact()">Fermer</button>
+    </div>
+</div>
+
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+    <div class="topbar-left">
+        <button class="menu-btn" id="menuBtn" onclick="toggleMenu()" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="topbar-logo">
+            <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="tgL" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#0284c7"/><stop offset="100%" stop-color="#0369a1"/>
+                    </linearGradient>
+                    <linearGradient id="tgD" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#0284c7"/>
+                    </linearGradient>
+                    <linearGradient id="tgR" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#0284c7"/>
+                    </linearGradient>
+                </defs>
+                <rect width="512" height="512" rx="115" fill="#ffffff"/>
+                <path d="M312 130 L392 130 L392 382 L312 382 Z" fill="url(#tgR)"/>
+                <path d="M130 130 L225 130 L392 382 L297 382 Z" fill="url(#tgD)"/>
+                <path d="M120 130 L195 130 L195 382 L120 382 Z" fill="url(#tgL)"/>
+                <line x1="120" y1="130" x2="195" y2="130" stroke="#bae6fd" stroke-width="6"/>
+                <line x1="312" y1="382" x2="392" y2="382" stroke="#bae6fd" stroke-width="6"/>
+            </svg>
+            <div class="topbar-logo-text">TrayForm <span>Pro</span></div>
+        </div>
+    </div>
+    <div class="unit-switcher">
+        <button class="unit-btn active" id="btn-mm" onclick="setUnit('mm')">mm</button>
+        <button class="unit-btn" id="btn-in" onclick="setUnit('in')">inch</button>
+    </div>
+</div>
+
+<!-- ══ DROPDOWN ══ -->
+<div class="dropdown" id="dropdown">
+    <!-- Langues -->
+    <div class="dropdown-section">
+        <div class="dropdown-label" id="dd-lang-label">Langue</div>
+        <div class="lang-option active" id="opt-fr" onclick="setLang('fr')"><span class="flag">🇫🇷</span> Français <span class="check" id="chk-fr">✓</span></div>
+        <div class="lang-option" id="opt-en" onclick="setLang('en')"><span class="flag">🇬🇧</span> English <span class="check" id="chk-en" style="display:none">✓</span></div>
+        <div class="lang-option" id="opt-es" onclick="setLang('es')"><span class="flag">🇪🇸</span> Español <span class="check" id="chk-es" style="display:none">✓</span></div>
+        <div class="lang-option" id="opt-de" onclick="setLang('de')"><span class="flag">🇩🇪</span> Deutsch <span class="check" id="chk-de" style="display:none">✓</span></div>
+        <div class="lang-option" id="opt-zh" onclick="setLang('zh')"><span class="flag">🇨🇳</span> 中文 <span class="check" id="chk-zh" style="display:none">✓</span></div>
+        <div class="lang-option" id="opt-ja" onclick="setLang('ja')"><span class="flag">🇯🇵</span> 日本語 <span class="check" id="chk-ja" style="display:none">✓</span></div>
+    </div>
+    <!-- Dark mode -->
+    <div class="dropdown-section">
+        <div class="menu-toggle-row" onclick="toggleDark()">
+            <span>🌙 <span id="dd-dark-label">Mode sombre</span></span>
+            <div class="toggle-switch" id="dark-toggle"></div>
+        </div>
+    </div>
+    <!-- Contact -->
+    <div class="dropdown-section">
+        <div class="menu-link" onclick="openContact()">
+            ✉️ &nbsp;<span id="dd-contact-label">Nous contacter</span>
+        </div>
+    </div>
+</div>
+
+<!-- ══ CONTENU ══ -->
+<div class="content">
+
+    <!-- GRILLE 2×2 SÉLECTION FIGURE -->
+    <div class="card" id="controls-panel">
+        <div class="card-title">⚙️ <span id="title-params">Paramètres</span></div>
+        <div id="error-msg" role="alert"></div>
+
+        <!-- 2×2 grid -->
+        <div class="figure-grid">
+            <!-- Angle Horizontal -->
+            <div class="figure-block active" id="block-horiz" onclick="selectBlock('horiz')">
+                <div class="figure-block-badge"></div>
+                <div class="figure-block-title" id="block-title-horiz">Angle Horizontal</div>
+                <select id="sel-horiz" onchange="selectBlock('horiz')" onclick="event.stopPropagation()">
+                    <option value="horiz-1x90">90° Simple</option>
+                    <option value="horiz-2x45">90° Large (2×45°)</option>
+                    <option value="horiz-custom">Sur-Mesure</option>
+                </select>
+            </div>
+            <!-- Angle Vertical -->
+            <div class="figure-block" id="block-vert" onclick="selectBlock('vert')">
+                <div class="figure-block-badge"></div>
+                <div class="figure-block-title" id="block-title-vert">Angle Vertical</div>
+                <select id="sel-vert" onchange="selectBlock('vert')" onclick="event.stopPropagation()">
+                    <option value="montee-1x90">Montée 90°</option>
+                    <option value="montee-2x45">Montée 2×45°</option>
+                    <option value="montee-custom">Montée Sur-Mesure</option>
+                    <option value="descente-1x90">Descente 90°</option>
+                    <option value="descente-2x45">Descente 2×45°</option>
+                    <option value="descente-custom">Descente Sur-Mesure</option>
+                </select>
+            </div>
+            <!-- Obstacle -->
+            <div class="figure-block" id="block-obs" onclick="selectBlock('obs')">
+                <div class="figure-block-badge"></div>
+                <div class="figure-block-title" id="block-title-obs">Contournement</div>
+                <select id="sel-obs" onchange="selectBlock('obs')" onclick="event.stopPropagation()">
+                    <option value="obs-horiz">Obstacle Horizontal</option>
+                    <option value="obs-vert">Saut de Loup (Vertical)</option>
+                </select>
+            </div>
+            <!-- Dérivation Té -->
+            <div class="figure-block" id="block-te" onclick="selectBlock('te')">
+                <div class="figure-block-badge"></div>
+                <div class="figure-block-title" id="block-title-te">Dérivation en Té</div>
+                <select id="sel-te" onchange="selectBlock('te')" onclick="event.stopPropagation()">
+                    <option value="te-horizontal">Té Horizontal</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Dimensions -->
+        <div class="group">
+            <label id="label-dims">Dimensions du bac principal</label>
+            <div class="input-row">
+                <div>
+                    <input type="number" id="width" value="150" min="1">
+                    <div class="input-label" id="label-W">Largeur (W)</div>
+                </div>
+                <div>
+                    <input type="number" id="height" value="50" min="1">
+                    <div class="input-label" id="label-H">Hauteur (H)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="group" id="angleGroup">
+            <label id="label-angle">Angle sur-mesure (°)</label>
+            <input type="number" id="customAngle" value="45" min="1" max="89">
+        </div>
+        <div class="group" id="secondaryGroup">
+            <label id="label-secondary">Largeur bac secondaire — Té</label>
+            <input type="number" id="width2" value="100" min="1">
+        </div>
+        <div class="group" id="obstacleGroup">
+            <label id="label-obstacle">Dimensions de l'obstacle</label>
+            <div class="input-row">
+                <div>
+                    <input type="number" id="obsD" value="200" min="1">
+                    <div class="input-label" id="label-D">Déport (D)</div>
+                </div>
+                <div>
+                    <input type="number" id="obsL" value="300" min="0">
+                    <div class="input-label" id="label-L">Longueur (L)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APERÇU -->
+    <div class="card" id="preview-container">
+        <div class="card-title">👁️ <span id="title-preview">Aperçu</span></div>
+        <div class="svg-area"><div id="preview-svg"></div></div>
+    </div>
+
+    <!-- GABARIT -->
+    <div class="card" id="plan-container">
+        <div class="card-title">📐 <span id="title-plan">Gabarit de Traçage</span></div>
+        <div class="legend">
+            <div class="legend-item"><div class="box-red"></div><span id="legend-cut">Zone à découper</span></div>
+            <div class="legend-item"><div class="box-green"></div><span id="legend-tab">Patte de recouvrement</span></div>
+            <div class="legend-item"><div class="box-blue"></div><span id="legend-fold">Axe de pliage</span></div>
+        </div>
+        <div class="svg-area svg-scroll"><div id="plan-svg"></div></div>
+    </div>
+
+    <!-- GABARIT 2 — BAC SECONDAIRE (Té uniquement) -->
+    <div class="card" id="plan2-container" style="display:none">
+        <div class="card-title">📐 <span id="title-plan2">Gabarit — Bac secondaire</span></div>
+        <div class="legend">
+            <div class="legend-item"><div class="box-red"></div><span id="legend-cut2">Zone à découper</span></div>
+            <div class="legend-item"><div class="box-green"></div><span id="legend-tab2">Patte de recouvrement</span></div>
+        </div>
+        <div class="svg-area svg-scroll"><div id="plan2-svg"></div></div>
+    </div>
+
+    <!-- DIMENSIONS -->
+    <div class="card" id="dims-container">
+        <div class="card-title">📏 <span id="title-dims">Encombrement après pliage</span></div>
+        <div id="dims-content"></div>
+    </div>
+
+    <!-- EPI WARNING -->
+    <div class="epi-warning">
+        <div class="epi-icon">⚠️</div>
+        <div class="epi-content">
+            <div class="epi-title" id="epi-title">Équipements de Protection Individuelle obligatoires</div>
+            <div class="epi-items">
+                <span class="epi-item">🧤 <span id="epi-gloves">Gants anti-coupures</span></span>
+                <span class="epi-item">👓 <span id="epi-glasses">Lunettes de protection</span></span>
+                <span class="epi-item">🔇 <span id="epi-hearing">Protection auditive</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEPS -->
+    <div class="card" id="steps-container">
+        <div class="card-title">🛠️ <span id="title-steps">Mode Opératoire</span></div>
+        <div class="step"><div class="step-number">1</div><div class="step-text" id="step1"></div></div>
+        <div class="step"><div class="step-number">2</div><div class="step-text" id="step2"></div></div>
+        <div class="step"><div class="step-number">3</div><div class="step-text" id="step3"></div></div>
+        <div class="step"><div class="step-number">4</div><div class="step-text" id="step4"></div></div>
+        <div class="step"><div class="step-number">5</div><div class="step-text" id="step5"></div></div>
+        <div class="step"><div class="step-number">6</div><div class="step-text" id="step6"></div></div>
+    </div>
+
+    <!-- SOUTENIR -->
+    <div class="support-card">
+        <div class="support-icon">❤️</div>
+        <div class="support-title" id="support-title">Soutenir le créateur</div>
+        <div class="support-subtitle" id="support-subtitle">
+            TrayForm Pro est gratuit et sans publicité.<br>
+            Si l'app vous fait gagner du temps sur le chantier, un petit geste est toujours apprécié !
+        </div>
+        <div class="support-buttons">
+            <a class="support-btn support-btn-primary" href="https://buymeacoffee.com/nexel" target="_blank" rel="noopener">
+                ☕ <span id="support-coffee">Contribution</span>
+            </a>
+            <a class="support-btn support-btn-secondary" href="https://paypal.me/Nexelapp" target="_blank" rel="noopener">
+                💳 <span id="support-donate">Faire un don</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <strong>TrayForm Pro</strong> — by <strong>Nexel</strong> &nbsp;·&nbsp; v11.0 &nbsp;·&nbsp;
+        <span id="footer-rights">Tous droits réservés</span>
+    </div>
+
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ═══════════════════════════════════════
+// ÉTAT
+// ═══════════════════════════════════════
+let currentLang  = 'fr';
+let currentUnit  = 'mm';
+let activeBlock  = 'horiz';
+let darkMode     = false;
+
+const MM_TO_IN = 0.0393701;
+const IN_TO_MM = 25.4;
+const TAB_MAX_MM = 100;
+
+// ═══════════════════════════════════════
+// DARK MODE
+// ═══════════════════════════════════════
+function toggleDark() {
+    darkMode = !darkMode;
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+    document.getElementById('dark-toggle').classList.toggle('on', darkMode);
+    localStorage.setItem('tfp-dark', darkMode ? '1' : '0');
+}
+
+// ═══════════════════════════════════════
+// MENU
+// ═══════════════════════════════════════
+function toggleMenu() {
+    const dd = document.getElementById('dropdown');
+    const ov = document.getElementById('overlay');
+    const open = dd.classList.toggle('open');
+    ov.classList.toggle('open', open);
+}
+function closeMenu() {
+    document.getElementById('dropdown').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+}
+
+// ═══════════════════════════════════════
+// CONTACT MODAL
+// ═══════════════════════════════════════
+function openContact() {
+    closeMenu();
+    document.getElementById('contactModal').classList.add('open');
+}
+function closeContact() {
+    document.getElementById('contactModal').classList.remove('open');
+}
+document.getElementById('contactModal').addEventListener('click', function(e) {
+    if (e.target === this) closeContact();
+});
+
+// ═══════════════════════════════════════
+// GRILLE 2×2 — SÉLECTION BLOC
+// ═══════════════════════════════════════
+function selectBlock(block) {
+    activeBlock = block;
+    ['horiz','vert','obs','te'].forEach(b => {
+        document.getElementById('block-'+b).classList.toggle('active', b === block);
+    });
+    updateApp();
+}
+
+function getActiveFigure() {
+    const map = { horiz:'sel-horiz', vert:'sel-vert', obs:'sel-obs', te:'sel-te' };
+    return document.getElementById(map[activeBlock]).value;
+}
+
+// ═══════════════════════════════════════
+// UNITÉS
+// ═══════════════════════════════════════
+function setUnit(unit) {
+    if (unit === currentUnit) return;
+    ['width','height','width2','obsD','obsL'].forEach(id => {
+        const el = document.getElementById(id);
+        const val = parseFloat(el.value);
+        if (!isNaN(val))
+            el.value = unit==='in' ? (val*MM_TO_IN).toFixed(3) : (val*IN_TO_MM).toFixed(1);
+    });
+    currentUnit = unit;
+    document.getElementById('btn-mm').classList.toggle('active', unit==='mm');
+    document.getElementById('btn-in').classList.toggle('active', unit==='in');
+    updateApp();
+}
+function toMM(v) { return currentUnit==='in' ? v*IN_TO_MM : v; }
+function fromMM(v) { return currentUnit==='in' ? v*MM_TO_IN : v; }
+function unitLabel() { return currentUnit==='mm' ? 'mm' : 'in'; }
+function fmtVal(mmVal) { const v=fromMM(mmVal); return currentUnit==='in' ? v.toFixed(3) : v.toFixed(1); }
+
+// ═══════════════════════════════════════
+// TRADUCTIONS
+// ═══════════════════════════════════════
+const T = {
+    fr: {
+        titleParams:"Paramètres", titlePreview:"Aperçu de la forme finale",
+        titlePlan:"Gabarit de Traçage (à l'échelle)", titleSteps:"Mode Opératoire",
+        labelDims:"Dimensions du bac principal",
+        labelW:"Largeur (W)", labelH:"Hauteur (H)", labelAngle:"Angle sur-mesure (°)",
+        labelSecondary:"Largeur bac secondaire — Té", labelObstacle:"Dimensions de l'obstacle",
+        labelD:"Déport (D)", labelL:"Longueur (L)",
+        legendCut:"Zone à découper", legendTab:"Patte de recouvrement (NE PAS couper)", legendFold:"Axe de pliage",
+        btnPrint:"Imprimer le gabarit", ddLangLabel:"Langue",
+        ddDarkLabel:"Mode sombre", ddContactLabel:"Nous contacter",
+        blockHoriz:"Angle Horizontal", blockVert:"Angle Vertical",
+        blockObs:"Contournement", blockTe:"Dérivation en Té",
+        selHoriz:["90° Simple","90° Large (2×45°)","Sur-Mesure"],
+        selVert:["Montée 90°","Montée 2×45°","Montée Sur-Mesure","Descente 90°","Descente 2×45°","Descente Sur-Mesure"],
+        selObs:["Obstacle Horizontal","Saut de Loup (Vertical)"],
+        selTe:["Té Horizontal"],
+        svgWing1:"AILE 1", svgBase:"FOND", svgWing2:"AILE 2", svgOpen:"Ouverture",
+        step1:"<strong>Dépliez mentalement le bac :</strong> FOND au centre, AILE 1 en haut, AILE 2 en bas.",
+        step2:"<strong>Positionnez le gabarit</strong> sur le bac déplié et tracez les repères.",
+        step3:"<strong>Tracez la valeur V</strong> de chaque côté de l'axe de coupe.",
+        step4_std:"<strong>Découpez les zones rouges</strong> à la cisaille ou meuleuse. <strong>Ne pas couper</strong> les zones <strong>vertes</strong> (pattes de recouvrement).",
+        step4_vert:"<strong>Découpez les zones rouges</strong> sur les ailes uniquement, bord à bord. Le fond n'est pas coupé.",
+        step4_te:"<strong>BAC 1 :</strong> Découpez l'aile 1 dans la zone rouge. Le fond et l'aile 2 ne sont pas coupés.<br><strong>BAC 2 :</strong> Découpez les ailes en bout sur W1−10mm. Conservez les pattes vertes côté intérieur.",
+        step5:"<strong>Pliez sur les axes :</strong> Rabattez les pattes vertes contre la pièce adjacente.",
+        step6:"<strong>Boulonnez :</strong> Boulons TRCC M6 dans les perforations des pattes de recouvrement.",
+        errorW:"Largeur ≥ 50 mm requise.", errorH:"Hauteur ≥ 20 mm requise.",
+        errorW2s:"Largeur bac secondaire ≥ 20 mm.", errorW2b:"Bac secondaire > bac principal.",
+        errorObs:"Déport obstacle > 0 requis.", errorAngle:"Angle entre 1° et 89°.",
+        supportTitle:"Soutenir le créateur",
+        supportSub:"TrayForm Pro est gratuit et sans publicité.<br>Si l'app vous fait gagner du temps sur le chantier, un petit geste est toujours apprécié !",
+        supportCoffee:"Contribution", supportDonate:"Faire un don", footerRights:"Tous droits réservés",
+        contactTitle:"Nous contacter", contactSub:"Une question, un bug ou une suggestion ? On vous répond rapidement.",
+        epiTitle:"Équipements de Protection Individuelle obligatoires avant toute coupe",
+        epiGloves:"Gants anti-coupures", epiGlasses:"Lunettes de protection", epiHearing:"Protection auditive",
+        titleDims:"Encombrement après pliage",
+        dimLenFinie:"Longueur finie", dimLargeur:"Largeur", dimHauteur:"Hauteur", dimNote:"hors pattes de recouvrement",
+        contactEmailDesc:"Support & questions générales", contactBmcDesc:"Messages & suggestions", contactClose:"Fermer"
+    },
+    en: {
+        titleParams:"Parameters", titlePreview:"Final Shape Preview",
+        titlePlan:"Cutting Template (to scale)", titleSteps:"Operating Procedure",
+        labelDims:"Main tray dimensions",
+        labelW:"Width (W)", labelH:"Height (H)", labelAngle:"Custom angle (°)",
+        labelSecondary:"Secondary tray width — T-junction", labelObstacle:"Obstacle dimensions",
+        labelD:"Offset (D)", labelL:"Length (L)",
+        legendCut:"Cut zone", legendTab:"Overlap tab (DO NOT cut)", legendFold:"Fold axis",
+        btnPrint:"Print template", ddLangLabel:"Language",
+        ddDarkLabel:"Dark mode", ddContactLabel:"Contact us",
+        blockHoriz:"Horizontal Bend", blockVert:"Vertical Bend",
+        blockObs:"Bypass", blockTe:"T-Junction",
+        selHoriz:["Simple 90°","Wide 90° (2×45°)","Custom"],
+        selVert:["Rise 90°","Rise 2×45°","Custom Rise","Drop 90°","Drop 2×45°","Custom Drop"],
+        selObs:["Horizontal Obstacle","Wolf Jump (Vertical)"],
+        selTe:["Horizontal T"],
+        svgWing1:"FLANGE 1", svgBase:"BASE", svgWing2:"FLANGE 2", svgOpen:"Opening",
+        step1:"<strong>Mentally unfold the tray:</strong> BASE in center, FLANGE 1 on top, FLANGE 2 on bottom.",
+        step2:"<strong>Position the template</strong> on the unfolded tray and mark the reference lines.",
+        step3:"<strong>Mark the V value</strong> on each side of the cut axis.",
+        step4_std:"<strong>Cut the red zones</strong> with shears or grinder. <strong>Do NOT cut</strong> the <strong>green</strong> zones (overlap tabs).",
+        step4_vert:"<strong>Cut the red zones</strong> on flanges only, edge to edge. The base is not cut.",
+        step4_te:"<strong>TRAY 1:</strong> Cut flange 1 in the red zone. Base and flange 2 are untouched.<br><strong>TRAY 2:</strong> Cut both flanges at the end over W1−10mm. Keep green tabs on the inner side.",
+        step5:"<strong>Fold on the axes:</strong> Bend the green tabs against the adjacent piece.",
+        step6:"<strong>Bolt it:</strong> TRCC M6 bolts through the overlap tab perforations.",
+        errorW:"Width ≥ 50 mm required.", errorH:"Height ≥ 20 mm required.",
+        errorW2s:"Secondary tray width ≥ 20 mm.", errorW2b:"Secondary tray wider than main tray.",
+        errorObs:"Obstacle offset must be > 0.", errorAngle:"Angle must be between 1° and 89°.",
+        supportTitle:"Support the creator",
+        supportSub:"TrayForm Pro is free and ad-free.<br>If the app saves you time on site, a small gesture is always appreciated!",
+        supportCoffee:"Contribution", supportDonate:"Make a donation", footerRights:"All rights reserved",
+        contactTitle:"Contact us", contactSub:"A question, a bug or a suggestion? We reply quickly.",
+        epiTitle:"Personal Protective Equipment required before any cutting",
+        epiGloves:"Cut-resistant gloves", epiGlasses:"Safety glasses", epiHearing:"Hearing protection",
+        titleDims:"Finished dimensions after bending",
+        dimLenFinie:"Finished length", dimLargeur:"Width", dimHauteur:"Height", dimNote:"excluding overlap tabs",
+        contactEmailDesc:"Support & general questions", contactBmcDesc:"Messages & suggestions", contactClose:"Close"
+    },
+    es: {
+        titleParams:"Parámetros", titlePreview:"Vista previa de la forma",
+        titlePlan:"Plantilla de Trazado (a escala)", titleSteps:"Procedimiento Operativo",
+        labelDims:"Dimensiones de la bandeja principal",
+        labelW:"Ancho (W)", labelH:"Alto (H)", labelAngle:"Ángulo personalizado (°)",
+        labelSecondary:"Ancho bandeja secundaria — T", labelObstacle:"Dimensiones del obstáculo",
+        labelD:"Desviación (D)", labelL:"Longitud (L)",
+        legendCut:"Zona a cortar", legendTab:"Lengüeta (NO cortar)", legendFold:"Eje de plegado",
+        btnPrint:"Imprimir plantilla", ddLangLabel:"Idioma",
+        ddDarkLabel:"Modo oscuro", ddContactLabel:"Contáctenos",
+        blockHoriz:"Ángulo Horizontal", blockVert:"Ángulo Vertical",
+        blockObs:"Desvío", blockTe:"Derivación en T",
+        selHoriz:["90° Simple","90° Amplio (2×45°)","Personalizado"],
+        selVert:["Subida 90°","Subida 2×45°","Subida Personalizada","Bajada 90°","Bajada 2×45°","Bajada Personalizada"],
+        selObs:["Obstáculo Horizontal","Salto de Lobo (Vertical)"],
+        selTe:["T Horizontal"],
+        svgWing1:"ALA 1", svgBase:"FONDO", svgWing2:"ALA 2", svgOpen:"Apertura",
+        step1:"<strong>Despliega mentalmente la bandeja:</strong> FONDO al centro, ALA 1 arriba, ALA 2 abajo.",
+        step2:"<strong>Posiciona la plantilla</strong> sobre la bandeja desplegada y traza las referencias.",
+        step3:"<strong>Traza el valor V</strong> a cada lado del eje de corte.",
+        step4_std:"<strong>Corta las zonas rojas</strong> con cizalla o amoladora. <strong>NO cortar</strong> las zonas <strong>verdes</strong> (lengüetas).",
+        step4_vert:"<strong>Corta las zonas rojas</strong> en las alas únicamente, borde a borde. El fondo no se corta.",
+        step4_te:"<strong>BANDEJA 1:</strong> Corta el ala 1 en la zona roja. Fondo y ala 2 intactos.<br><strong>BANDEJA 2:</strong> Corta ambas alas en el extremo sobre W1−10mm. Conserva las lengüetas verdes al interior.",
+        step5:"<strong>Plega sobre los ejes:</strong> Dobla las lengüetas verdes contra la pieza adyacente.",
+        step6:"<strong>Atornilla:</strong> Tornillos TRCC M6 en las perforaciones de las lengüetas.",
+        errorW:"Ancho ≥ 50 mm.", errorH:"Alto ≥ 20 mm.",
+        errorW2s:"Bandeja secundaria ≥ 20 mm.", errorW2b:"Secundaria > principal.",
+        errorObs:"Desviación > 0.", errorAngle:"Ángulo entre 1° y 89°.",
+        supportTitle:"Apoyar al creador",
+        supportSub:"TrayForm Pro es gratuito y sin publicidad.<br>¡Un pequeño gesto siempre se agradece!",
+        supportCoffee:"Contribución", supportDonate:"Hacer una donación", footerRights:"Todos los derechos reservados",
+        contactTitle:"Contáctenos", contactSub:"¿Pregunta, error o sugerencia? Respondemos rápido.",
+        epiTitle:"Equipos de Protección Individual obligatorios antes de cortar",
+        epiGloves:"Guantes anticorte", epiGlasses:"Gafas de protección", epiHearing:"Protección auditiva",
+        titleDims:"Dimensiones finales tras el plegado",
+        dimLenFinie:"Longitud final", dimLargeur:"Ancho", dimHauteur:"Alto", dimNote:"sin lengüetas",
+        contactEmailDesc:"Soporte & preguntas generales", contactBmcDesc:"Mensajes & sugerencias", contactClose:"Cerrar"
+    },
+    de: {
+        titleParams:"Parameter", titlePreview:"Formvorschau",
+        titlePlan:"Zeichenschablone (maßstäblich)", titleSteps:"Arbeitsanleitung",
+        labelDims:"Abmessungen der Haupttasse",
+        labelW:"Breite (W)", labelH:"Höhe (H)", labelAngle:"Benutzerdefinierter Winkel (°)",
+        labelSecondary:"Breite Nebentasse — T-Stück", labelObstacle:"Hindernisabmessungen",
+        labelD:"Versatz (D)", labelL:"Länge (L)",
+        legendCut:"Schnittzone", legendTab:"Überlappungslasche (NICHT schneiden)", legendFold:"Biegeachse",
+        btnPrint:"Schablone drucken", ddLangLabel:"Sprache",
+        ddDarkLabel:"Dunkelmodus", ddContactLabel:"Kontaktieren Sie uns",
+        blockHoriz:"Horizontale Biegung", blockVert:"Vertikale Biegung",
+        blockObs:"Umgehung", blockTe:"T-Abzweigung",
+        selHoriz:["Einfach 90°","Breit 90° (2×45°)","Benutzerdefiniert"],
+        selVert:["Aufstieg 90°","Aufstieg 2×45°","Aufstieg Custom","Abstieg 90°","Abstieg 2×45°","Abstieg Custom"],
+        selObs:["Horizontales Hindernis","Wolfsprung (Vertikal)"],
+        selTe:["Horizontales T-Stück"],
+        svgWing1:"FLANSCH 1", svgBase:"BODEN", svgWing2:"FLANSCH 2", svgOpen:"Öffnung",
+        step1:"<strong>Gedanklich abwickeln:</strong> BODEN Mitte, FLANSCH 1 oben, FLANSCH 2 unten.",
+        step2:"<strong>Schablone positionieren</strong> und Markierungen auf das Profil übertragen.",
+        step3:"<strong>V-Wert anzeichnen</strong> auf jeder Seite der Schnittachse.",
+        step4_std:"<strong>Rote Zonen schneiden</strong> mit Schere oder Winkelschleifer. <strong>Grüne</strong> Zonen NICHT schneiden (Überlappungslaschen).",
+        step4_vert:"<strong>Rote Zonen schneiden</strong> nur an Flanschen, kantenbündig. Boden wird nicht geschnitten.",
+        step4_te:"<strong>PROFIL 1:</strong> Flansch 1 in der roten Zone schneiden. Boden und Flansch 2 bleiben. <br><strong>PROFIL 2:</strong> Beide Flansche am Ende auf W1−10mm schneiden. Grüne Laschen innen behalten.",
+        step5:"<strong>Auf den Achsen biegen:</strong> Grüne Laschen gegen das Nachbarprofil klappen.",
+        step6:"<strong>Verschrauben:</strong> TRCC M6 Schrauben durch die Laschenperforierungen.",
+        errorW:"Breite ≥ 50 mm.", errorH:"Höhe ≥ 20 mm.",
+        errorW2s:"Nebenbreite ≥ 20 mm.", errorW2b:"Nebentasse > Haupttasse.",
+        errorObs:"Versatz > 0.", errorAngle:"Winkel 1°–89°.",
+        supportTitle:"Den Entwickler unterstützen",
+        supportSub:"TrayForm Pro ist kostenlos und werbefrei.<br>Eine kleine Geste ist immer willkommen!",
+        supportCoffee:"Beitrag", supportDonate:"Spende leisten", footerRights:"Alle Rechte vorbehalten",
+        contactTitle:"Kontakt", contactSub:"Frage, Fehler oder Vorschlag? Wir antworten schnell.",
+        epiTitle:"Persönliche Schutzausrüstung vor jedem Schnitt erforderlich",
+        epiGloves:"Schnittschutzhandschuhe", epiGlasses:"Schutzbrille", epiHearing:"Gehörschutz",
+        titleDims:"Fertigmaße nach dem Biegen",
+        dimLenFinie:"Fertiglänge", dimLargeur:"Breite", dimHauteur:"Höhe", dimNote:"ohne Überlappungslaschen",
+        contactEmailDesc:"Support & allgemeine Fragen", contactBmcDesc:"Nachrichten & Vorschläge", contactClose:"Schließen"
+    },
+    zh: {
+        titleParams:"参数设置", titlePreview:"最终形状预览",
+        titlePlan:"切割模板（按比例）", titleSteps:"操作步骤",
+        labelDims:"主桥架尺寸",
+        labelW:"宽度 (W)", labelH:"高度 (H)", labelAngle:"自定义角度（°）",
+        labelSecondary:"副桥架宽度 — T形", labelObstacle:"障碍物尺寸",
+        labelD:"偏移量 (D)", labelL:"长度 (L)",
+        legendCut:"切割区域", legendTab:"搭接片（勿切）", legendFold:"折弯轴",
+        btnPrint:"打印模板", ddLangLabel:"语言",
+        ddDarkLabel:"深色模式", ddContactLabel:"联系我们",
+        blockHoriz:"水平弯头", blockVert:"垂直弯头",
+        blockObs:"绕障", blockTe:"T形分支",
+        selHoriz:["简单90°","宽90°(2×45°)","自定义"],
+        selVert:["上升90°","上升2×45°","自定义上升","下降90°","下降2×45°","自定义下降"],
+        selObs:["水平障碍","垂直绕障"],
+        selTe:["水平T形"],
+        svgWing1:"侧翼1", svgBase:"底板", svgWing2:"侧翼2", svgOpen:"开口",
+        step1:"<strong>展开桥架：</strong>底板居中，侧翼1在上，侧翼2在下。",
+        step2:"<strong>放置模板</strong>在展开的桥架上，标记参考线。",
+        step3:"<strong>标记V值</strong>在切割轴线两侧。",
+        step4_std:"<strong>切割红色区域</strong>（剪刀或角磨机）。<strong>禁止切割绿色</strong>区域（搭接片）。",
+        step4_vert:"<strong>仅切割侧翼红色区域</strong>，边对边。底板不切割。",
+        step4_te:"<strong>桥架1：</strong>切割侧翼1红色区域，底板和侧翼2不动。<br><strong>桥架2：</strong>两侧翼端部切割W1−10mm，保留内侧绿色搭接片。",
+        step5:"<strong>沿轴线折弯：</strong>将绿色搭接片折向相邻桥架。",
+        step6:"<strong>螺栓固定：</strong>TRCC M6螺栓穿过搭接片孔。",
+        errorW:"宽度≥50mm。", errorH:"高度≥20mm。",
+        errorW2s:"副桥架≥20mm。", errorW2b:"副桥架超出主桥架。",
+        errorObs:"偏移>0。", errorAngle:"角度1°~89°。",
+        supportTitle:"支持创作者",
+        supportSub:"TrayForm Pro 免费且无广告。<br>您的支持将不胜感激！",
+        supportCoffee:"贡献", supportDonate:"捐款", footerRights:"版权所有",
+        contactTitle:"联系我们", contactSub:"问题、错误或建议？我们会快速回复。",
+        epiTitle:"切割前必须佩戴个人防护装备",
+        epiGloves:"防割手套", epiGlasses:"防护眼镜", epiHearing:"听力保护",
+        titleDims:"折弯后成品尺寸",
+        dimLenFinie:"成品长度", dimLargeur:"宽度", dimHauteur:"高度", dimNote:"不含搭接片",
+        contactEmailDesc:"支持与一般问题", contactBmcDesc:"消息与建议", contactClose:"关闭"
+    },
+    ja: {
+        titleParams:"パラメータ", titlePreview:"完成形プレビュー",
+        titlePlan:"切断テンプレート（縮尺）", titleSteps:"作業手順",
+        labelDims:"メインラック寸法",
+        labelW:"幅 (W)", labelH:"高さ (H)", labelAngle:"カスタム角度（°）",
+        labelSecondary:"サブラック幅 — T字", labelObstacle:"障害物寸法",
+        labelD:"オフセット (D)", labelL:"長さ (L)",
+        legendCut:"切断ゾーン", legendTab:"重ねタブ（切断禁止）", legendFold:"折り曲げ軸",
+        btnPrint:"テンプレート印刷", ddLangLabel:"言語",
+        ddDarkLabel:"ダークモード", ddContactLabel:"お問い合わせ",
+        blockHoriz:"水平曲げ", blockVert:"垂直曲げ",
+        blockObs:"迂回", blockTe:"T字分岐",
+        selHoriz:["単純90°","広幅90°(2×45°)","カスタム"],
+        selVert:["上昇90°","上昇2×45°","カスタム上昇","下降90°","下降2×45°","カスタム下降"],
+        selObs:["水平障害物","垂直迂回"],
+        selTe:["水平T字"],
+        svgWing1:"フランジ1", svgBase:"底板", svgWing2:"フランジ2", svgOpen:"開口部",
+        step1:"<strong>ラックを展開：</strong>底板中央、フランジ1上、フランジ2下。",
+        step2:"<strong>テンプレートを配置</strong>し、基準線をラックに写し取る。",
+        step3:"<strong>切断軸の両側にV値をマーク。</strong>",
+        step4_std:"<strong>赤いゾーンを切断</strong>（シャーまたはグラインダー）。<strong>緑のゾーンは切断禁止</strong>（重ね代タブ）。",
+        step4_vert:"<strong>フランジの赤いゾーンのみ切断、</strong>端から端まで。底板は切断しない。",
+        step4_te:"<strong>ラック1：</strong>フランジ1の赤いゾーンを切断。底板とフランジ2はそのまま。<br><strong>ラック2：</strong>両フランジをW1−10mmで端部切断。内側の緑タブを保持。",
+        step5:"<strong>軸線で折り曲げ：</strong>緑タブを隣接ラックに折り返す。",
+        step6:"<strong>ボルト締め：</strong>TRCC M6ボルトをタブ穴に通す。",
+        errorW:"幅≥50mm。", errorH:"高さ≥20mm。",
+        errorW2s:"サブラック≥20mm。", errorW2b:"サブラックがメインを超過。",
+        errorObs:"オフセット>0。", errorAngle:"角度1°〜89°。",
+        supportTitle:"クリエイターを応援",
+        supportSub:"TrayForm Proは無料・広告なし。<br>応援よろしくお願いします！",
+        supportCoffee:"貢献", supportDonate:"寄付", footerRights:"全著作権所有",
+        contactTitle:"お問い合わせ", contactSub:"質問・バグ・提案はこちら。",
+        epiTitle:"切断前に個人用保護具の着用が必須です",
+        epiGloves:"耐切創手袋", epiGlasses:"保護メガネ", epiHearing:"聴覚保護具",
+        titleDims:"折り曲げ後の仕上がり寸法",
+        dimLenFinie:"仕上がり長さ", dimLargeur:"幅", dimHauteur:"高さ", dimNote:"重ね代タブ除く",
+        contactEmailDesc:"サポート・一般的なご質問", contactBmcDesc:"メッセージ・ご提案", contactClose:"閉じる"
+    }
+};
+
+// ═══════════════════════════════════════
+// APPLIQUER LANGUE
+// ═══════════════════════════════════════
+function setLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    ['fr','en','es','de','zh','ja'].forEach(l => {
+        document.getElementById('opt-'+l).classList.toggle('active', l===lang);
+        document.getElementById('chk-'+l).style.display = l===lang ? '' : 'none';
+    });
+    const tr = T[lang];
+
+    // Labels fixes
+    const ids = {
+        'title-params':tr.titleParams,'title-preview':tr.titlePreview,
+        'title-plan':tr.titlePlan,'title-steps':tr.titleSteps,
+        'label-dims':tr.labelDims,'label-W':tr.labelW,'label-H':tr.labelH,
+        'label-angle':tr.labelAngle,'label-secondary':tr.labelSecondary,
+        'label-obstacle':tr.labelObstacle,'label-D':tr.labelD,'label-L':tr.labelL,
+        'legend-cut':tr.legendCut,'legend-tab':tr.legendTab,'legend-fold':tr.legendFold,
+        'label-print':tr.btnPrint,'dd-lang-label':tr.ddLangLabel,
+        'dd-dark-label':tr.ddDarkLabel,'dd-contact-label':tr.ddContactLabel,
+        'block-title-horiz':tr.blockHoriz,'block-title-vert':tr.blockVert,
+        'block-title-obs':tr.blockObs,'block-title-te':tr.blockTe,
+        'step1':tr.step1,'step2':tr.step2,'step3':tr.step3,
+        'step5':tr.step5,'step6':tr.step6,
+        'support-title':tr.supportTitle,'support-subtitle':tr.supportSub,
+        'support-coffee':tr.supportCoffee,'support-donate':tr.supportDonate,
+        'footer-rights':tr.footerRights,
+        'contact-title':tr.contactTitle,'contact-sub':tr.contactSub,
+        'contact-email-desc':tr.contactEmailDesc,'contact-bmc-desc':tr.contactBmcDesc,
+        'contact-close':tr.contactClose,
+        'epi-title':tr.epiTitle,'epi-gloves':tr.epiGloves,
+        'epi-glasses':tr.epiGlasses,'epi-hearing':tr.epiHearing,
+        'title-dims':tr.titleDims
+    };
+    Object.entries(ids).forEach(([id,val]) => { const el=document.getElementById(id); if(el) el.innerHTML=val; });
+
+    // Rebuild selects dans les blocs
+    function rebuildSelect(selId, vals, labels) {
+        const sel = document.getElementById(selId);
+        const cur = sel.value;
+        sel.innerHTML = '';
+        vals.forEach((v,i) => { const o=document.createElement('option'); o.value=v; o.textContent=labels[i]; sel.appendChild(o); });
+        if (vals.includes(cur)) sel.value = cur;
+    }
+    rebuildSelect('sel-horiz',
+        ['horiz-1x90','horiz-2x45','horiz-custom'], tr.selHoriz);
+    rebuildSelect('sel-vert',
+        ['montee-1x90','montee-2x45','montee-custom','descente-1x90','descente-2x45','descente-custom'], tr.selVert);
+    rebuildSelect('sel-obs',
+        ['obs-horiz','obs-vert'], tr.selObs);
+    rebuildSelect('sel-te',
+        ['te-horizontal'], tr.selTe);
+
+    closeMenu();
+    updateApp();
+}
+
+// ═══════════════════════════════════════
+// VALIDATION
+// ═══════════════════════════════════════
+function validate(wMM,hMM,w2MM,obsDmm,figure,angle) {
+    const tr=T[currentLang], errs=[];
+    if (!wMM||wMM<50)  errs.push(tr.errorW);
+    if (!hMM||hMM<20)  errs.push(tr.errorH);
+    if (figure==='te-horizontal'&&(!w2MM||w2MM<20)) errs.push(tr.errorW2s);
+    if (figure==='te-horizontal'&&w2MM>wMM)         errs.push(tr.errorW2b);
+    if (figure.includes('obs')&&obsDmm<=0)          errs.push(tr.errorObs);
+    if (figure.includes('custom')&&(angle<1||angle>=90)) errs.push(tr.errorAngle);
+    return errs;
+}
+
+// ═══════════════════════════════════════
+// UPDATE PRINCIPALE
+// ═══════════════════════════════════════
+function updateApp() {
+    const figure  = getActiveFigure();
+    const wRaw    = parseFloat(document.getElementById('width').value)||0;
+    const hRaw    = parseFloat(document.getElementById('height').value)||0;
+    const w2Raw   = parseFloat(document.getElementById('width2').value)||0;
+    const customA = parseFloat(document.getElementById('customAngle').value)||45;
+    const obsDRaw = parseFloat(document.getElementById('obsD').value)||0;
+    const obsLRaw = parseFloat(document.getElementById('obsL').value)||0;
+    const w=toMM(wRaw), h=toMM(hRaw), w2=toMM(w2Raw), obsD=toMM(obsDRaw), obsL=toMM(obsLRaw);
+
+    document.getElementById('secondaryGroup').style.display = figure==='te-horizontal' ? 'block':'none';
+    document.getElementById('obstacleGroup').style.display  = figure.includes('obs')   ? 'block':'none';
+    document.getElementById('angleGroup').style.display     = figure.includes('custom')? 'block':'none';
+
+    let angle=45;
+    if (figure.includes('1x90'))   angle=90;
+    if (figure.includes('custom')) angle=Math.min(89,Math.max(1,customA));
+
+    const errEl=document.getElementById('error-msg');
+    const errs=validate(w,h,w2,obsD,figure,angle);
+    if (errs.length>0) { errEl.style.display='block'; errEl.textContent='⚠️ '+errs.join(' | '); return; }
+    errEl.style.display='none';
+
+    const tr=T[currentLang];
+    const step4=document.getElementById('step4');
+    if (figure.includes('montee')||figure.includes('descente')) step4.innerHTML=tr.step4_vert;
+    else if (figure==='te-horizontal') step4.innerHTML=tr.step4_te;
+    else step4.innerHTML=tr.step4_std;
+
+    renderMiniature(figure,w,h,w2,obsD,obsL,angle);
+    renderPlan(figure,w,h,w2,obsD,obsL,angle);
+    renderDims(figure,w,h,w2,obsD,obsL,angle);
+    // Gabarit 2 : uniquement pour le Té
+    const plan2El = document.getElementById('plan2-container');
+    if (figure==='te-horizontal') {
+        plan2El.style.cssText = 'display:block !important';
+        renderPlan2(w, h, w2 > 0 ? w2 : 100);
+    } else {
+        plan2El.style.cssText = 'display:none';
+    }
+}
+
+// ═══════════════════════════════════════
+// ENCOMBREMENT APRÈS PLIAGE
+// ═══════════════════════════════════════
+function renderDims(figure,w,h,w2,obsD,obsL,angle) {
+    const tr = T[currentLang], ul = unitLabel();
+    const el = document.getElementById('dims-content');
+
+    function row(label, value) {
+        return `<div class="dim-row">
+            <div class="dim-label">${label}</div>
+            <div class="dim-value">${value}</div>
+        </div>`;
+    }
+    function f(mm) { return fmtVal(mm) + ul; }
+
+    let html = '<div class="dims-grid">';
+
+    if (figure==='horiz-1x90') {
+        html += row(tr.dimLenFinie, f(w));
+
+    } else if (figure==='horiz-2x45') {
+        html += row(tr.dimLenFinie, f(w + w*1.5));
+
+    } else if (figure==='montee-1x90'||figure==='descente-1x90') {
+        html += row(tr.dimLenFinie, f(h));
+
+    } else if (figure==='montee-2x45'||figure==='descente-2x45') {
+        html += row(tr.dimLenFinie, f(h + h*2));
+
+    } else if (figure==='te-horizontal') {
+        html += row('BAC 1 — ' + tr.dimLargeur, f(w));
+        html += row('BAC 2 — ' + tr.dimLargeur, f(w2));
+
+    } else if (figure==='obs-horiz'||figure==='obs-vert') {
+        html += row(tr.dimLenFinie, f(obsD + obsL));
+
+    } else {
+        html += `<div class="dim-row"><div class="dim-value" style="font-size:14px;opacity:0.5">—</div></div>`;
+    }
+
+    html += '</div>';
+    el.innerHTML = html;
+}
+
+// ═══════════════════════════════════════
+// MINIATURE
+// ═══════════════════════════════════════
+function renderMiniature(figure,w,h,w2,obsD,obsL,angle) {
+    const BLUE='#0284c7', LBLUE='#38bdf8';
+    const fillColor = darkMode ? '#1e3a5f' : 'url(#metalGrad)';
+    let svg=`<svg viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="metalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#e0f2fe"/><stop offset="100%" stop-color="#bae6fd"/>
+        </linearGradient>
+        <marker id="arr-m" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 z" fill="${BLUE}"/>
+        </marker>
+    </defs>`;
+    const ul=unitLabel();
+    function dimLine(x1,x2,y,text){
+        svg+=`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${BLUE}" stroke-width="1.5" marker-start="url(#arr-m)" marker-end="url(#arr-m)"/>`;
+        svg+=`<line x1="${x1}" y1="${y-6}" x2="${x1}" y2="${y+6}" stroke="${BLUE}" stroke-width="1.5"/>`;
+        svg+=`<line x1="${x2}" y1="${y-6}" x2="${x2}" y2="${y+6}" stroke="${BLUE}" stroke-width="1.5"/>`;
+        svg+=`<text x="${(x1+x2)/2}" y="${y-8}" fill="${BLUE}" font-size="12" font-weight="700" text-anchor="middle" font-family="JetBrains Mono,monospace">${text}</text>`;
+    }
+    const wD=fmtVal(w),hD=fmtVal(h),w2D=fmtVal(w2);
+    if (figure.includes('horiz-1x90'))       { svg+=`<path d="M 40 120 L 140 120 L 140 20 L 100 20 L 100 80 L 40 80 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; dimLine(100,140,148,`W=${wD}${ul}`); }
+    else if (figure.includes('horiz-2x45'))  { svg+=`<path d="M 30 120 L 130 120 L 200 55 L 200 15 L 160 15 L 160 50 L 115 95 L 30 95 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; }
+    else if (figure.includes('horiz-custom')){ svg+=`<path d="M 35 120 L 135 120 L 215 65 L 185 20 L 105 70 L 35 70 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; dimLine(105,185,148,`α=${angle}°`); }
+    else if (figure==='te-horizontal')       { svg+=`<path d="M 40 100 L 360 100 L 360 65 L 215 65 L 215 20 L 185 20 L 185 65 L 40 65 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; dimLine(185,215,130,`W2=${w2D}${ul}`); }
+    else if (figure.includes('montee-1x90')) { svg+=`<path d="M 35 115 L 135 115 L 135 15 L 105 15 L 105 85 L 35 85 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; dimLine(105,135,145,`H=${hD}${ul}`); }
+    else if (figure.includes('montee-2x45')) { svg+=`<path d="M 35 115 L 135 115 L 200 55 L 200 10 L 170 10 L 170 50 L 120 90 L 35 90 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; }
+    else if (figure.includes('montee-custom')){ svg+=`<path d="M 35 115 L 135 115 L 210 55 L 185 15 L 105 70 L 35 70 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; dimLine(105,185,145,`α=${angle}°`); }
+    else if (figure.includes('descente-1x90')){ svg+=`<path d="M 35 30 L 135 30 L 135 130 L 105 130 L 105 60 L 35 60 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; dimLine(105,135,15,`H=${hD}${ul}`); }
+    else if (figure.includes('descente-2x45')){ svg+=`<path d="M 35 25 L 135 25 L 200 90 L 200 140 L 170 140 L 170 95 L 120 55 L 35 55 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; }
+    else if (figure.includes('descente-custom')){ svg+=`<path d="M 35 25 L 135 25 L 215 90 L 185 130 L 105 70 L 35 70 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; dimLine(105,185,15,`α=${angle}°`); }
+    else if (figure==='obs-horiz'){ svg+=`<path d="M 15 115 L 90 115 L 140 65 L 255 65 L 305 115 L 385 115 L 385 85 L 315 85 L 260 35 L 130 35 L 80 85 L 15 85 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; }
+    else if (figure==='obs-vert') { svg+=`<path d="M 15 120 L 90 120 L 140 60 L 255 60 L 305 120 L 385 120 L 385 90 L 315 90 L 260 30 L 130 30 L 80 90 L 15 90 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; }
+    svg+=`</svg>`;
+    document.getElementById('preview-svg').innerHTML=svg;
+}
+
+// ═══════════════════════════════════════
+// GABARIT
+// ═══════════════════════════════════════
+function renderPlan(figure,w,h,w2,obsD,obsL,angle) {
+    try {
+    const tr=T[currentLang], ul=unitLabel();
+    const BLUE='#0284c7', LBLUE='#38bdf8';
+    const totalH=h+w+h, scale=220/totalH;
+    const sH=h*scale, sW=w*scale;
+    const yAileExt=25, yFond=yAileExt+sH, yAileInt=yFond+sW, yEnd=yAileInt+sH;
+    const biais45=obsD/Math.sin(Math.PI/4);
+    let L_TOTAL=900;
+    if (figure.includes('obs')) L_TOTAL=Math.max(900,120+biais45*scale*2+obsL*scale+120);
+    else if (figure.includes('2x45')) { const d=(figure.includes('montee')||figure.includes('descente'))?h*2:w*1.5; L_TOTAL=Math.max(700,240+d*scale*2); }
+
+    const bgColor = darkMode ? '#0c1a2e' : '#f0f9ff';
+    const bgBorder = darkMode ? '#1e3a5f' : '#bae6fd';
+
+    let svg=`<svg viewBox="0 0 ${L_TOTAL} ${yEnd+70}" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <pattern id="cut" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+            <line x1="0" y1="0" x2="0" y2="8" stroke="#ef4444" stroke-width="3"/>
+        </pattern>
+        <marker id="arr-b" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L0,8 L8,4 z" fill="${BLUE}"/>
+        </marker>
+    </defs>`;
+    svg+=`<rect x="50" y="${yAileExt}" width="${L_TOTAL-100}" height="${yEnd-yAileExt}" fill="${bgColor}" stroke="${bgBorder}" stroke-width="2"/>`;
+    svg+=`<line x1="50" y1="${yFond}"    x2="${L_TOTAL-50}" y2="${yFond}"    stroke="${bgBorder}" stroke-width="2"/>`;
+    svg+=`<line x1="50" y1="${yAileInt}" x2="${L_TOTAL-50}" y2="${yAileInt}" stroke="${bgBorder}" stroke-width="2"/>`;
+    const wD=fmtVal(w),hD=fmtVal(h);
+    const txtColor=darkMode?'#7dd3fc':BLUE;
+    svg+=`<text x="60" y="${yAileExt+sH/2+5}"  fill="${txtColor}" font-size="13" font-weight="700" font-family="JetBrains Mono,monospace">${tr.svgWing1} — H:${hD}${ul}</text>`;
+    svg+=`<text x="60" y="${yFond+sW/2+6}"     fill="${txtColor}" font-size="18" font-weight="900" font-family="JetBrains Mono,monospace">${tr.svgBase} — W:${wD}${ul}</text>`;
+    svg+=`<text x="60" y="${yAileInt+sH/2+5}"  fill="${txtColor}" font-size="13" font-weight="700" font-family="JetBrains Mono,monospace">${tr.svgWing2} — H:${hD}${ul}</text>`;
+
+    // Patte de recouvrement : min(V, 100mm)
+
+    function drawHorizCut(xPos,hingeSide,isLeftTab,localAngle) {
+        const coteX=w*Math.tan(localAngle/2*Math.PI/180),sX=coteX*scale;
+        // Patte = min(coteX, 100mm) mais jamais > sX (zone de coupe dispo)
+        const tabMM = Math.min(coteX, TAB_MAX_MM);
+        const tabW  = tabMM * scale;
+        if (hingeSide==='top') {
+            svg+=`<polygon points="${xPos},${yFond} ${xPos-sX},${yAileInt} ${xPos+sX},${yAileInt}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+            svg+=`<rect x="${xPos-sX}" y="${yAileInt}" width="${sX*2}" height="${sH}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+            const pX=isLeftTab ? xPos+sX-tabW : xPos-sX;
+            svg+=`<rect x="${pX}" y="${yAileInt}" width="${tabW}" height="${sH}" fill="#10b981" stroke="#047857" stroke-width="2"/>`;
+            svg+=`<line x1="${xPos}" y1="${yAileExt}" x2="${xPos}" y2="${yFond}" stroke="${LBLUE}" stroke-width="3" stroke-dasharray="10,5"/>`;
+        } else {
+            svg+=`<polygon points="${xPos},${yAileInt} ${xPos-sX},${yFond} ${xPos+sX},${yFond}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+            svg+=`<rect x="${xPos-sX}" y="${yAileExt}" width="${sX*2}" height="${sH}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+            const pX=isLeftTab ? xPos+sX-tabW : xPos-sX;
+            svg+=`<rect x="${pX}" y="${yAileExt}" width="${tabW}" height="${sH}" fill="#10b981" stroke="#047857" stroke-width="2"/>`;
+            svg+=`<line x1="${xPos}" y1="${yAileInt}" x2="${xPos}" y2="${yEnd}" stroke="${LBLUE}" stroke-width="3" stroke-dasharray="10,5"/>`;
+        }
+        svg+=`<text x="${xPos}" y="${yAileExt-10}" fill="${BLUE}" font-size="14" font-weight="900" font-family="JetBrains Mono,monospace" text-anchor="middle" paint-order="stroke" stroke="white" stroke-width="4">V = ${fmtVal(coteX*2)} ${ul}</text>`;
+        // Cote patte
+        const pX2=isLeftTab?xPos+sX-tabW:xPos-sX;
+        svg+=`<text x="${pX2+tabW/2}" y="${hingeSide==='top'?yEnd+16:yAileExt-10}" fill="#047857" font-size="11" font-weight="700" font-family="JetBrains Mono,monospace" text-anchor="middle">↔ ${fmtVal(tabMM)}${ul}</text>`;
+    }
+
+    function drawVertCut(xPos,type,isLeftTab,localAngle) {
+        const coteX=h*Math.tan(localAngle/2*Math.PI/180),sX=coteX*scale;
+        const tabMM = Math.min(coteX, TAB_MAX_MM);
+        const tabW  = tabMM * scale;
+        if (type==='montee') {
+            // Coupe triangulaire uniquement sur ailes, pas de patte (bord à bord)
+            svg+=`<polygon points="${xPos},${yFond} ${xPos-sX},${yAileExt} ${xPos+sX},${yAileExt}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+            svg+=`<polygon points="${xPos},${yAileInt} ${xPos-sX},${yEnd} ${xPos+sX},${yEnd}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+            svg+=`<line x1="${xPos}" y1="${yFond}" x2="${xPos}" y2="${yAileInt}" stroke="${LBLUE}" stroke-width="3" stroke-dasharray="10,5"/>`;
+            svg+=`<circle cx="${xPos}" cy="${yFond}" r="5" fill="${LBLUE}"/>`;
+            svg+=`<circle cx="${xPos}" cy="${yAileInt}" r="5" fill="${LBLUE}"/>`;
+        } else {
+            // Descente : coupe + patte de recouvrement plafonnée à 100mm
+            svg+=`<polygon points="${xPos},${yAileExt} ${xPos-sX},${yFond} ${xPos+sX},${yFond}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+            svg+=`<polygon points="${xPos},${yEnd} ${xPos-sX},${yAileInt} ${xPos+sX},${yAileInt}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+            svg+=`<rect x="${xPos-sX}" y="${yFond}" width="${sX*2}" height="${sW}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+            const pX=isLeftTab ? xPos+sX-tabW : xPos-sX;
+            svg+=`<rect x="${pX}" y="${yFond}" width="${tabW}" height="${sW}" fill="#10b981" stroke="#047857" stroke-width="2"/>`;
+            svg+=`<text x="${pX+tabW/2}" y="${yFond+sW/2+5}" fill="#047857" font-size="11" font-weight="700" font-family="JetBrains Mono,monospace" text-anchor="middle">↔ ${fmtVal(tabMM)}${ul}</text>`;
+            svg+=`<circle cx="${xPos}" cy="${yAileExt}" r="5" fill="${LBLUE}"/>`;
+            svg+=`<circle cx="${xPos}" cy="${yEnd}" r="5" fill="${LBLUE}"/>`;
+        }
+        svg+=`<text x="${xPos}" y="${yAileExt-10}" fill="${BLUE}" font-size="14" font-weight="900" font-family="JetBrains Mono,monospace" text-anchor="middle" paint-order="stroke" stroke="white" stroke-width="4">V = ${fmtVal(coteX*2)} ${ul}</text>`;
+    }
+    function drawDimArrow(x1,x2,y,text) {
+        svg+=`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${BLUE}" stroke-width="2.5" marker-start="url(#arr-b)" marker-end="url(#arr-b)"/>`;
+        svg+=`<line x1="${x1}" y1="${y-8}" x2="${x1}" y2="${y+8}" stroke="${BLUE}" stroke-width="2"/>`;
+        svg+=`<line x1="${x2}" y1="${y-8}" x2="${x2}" y2="${y+8}" stroke="${BLUE}" stroke-width="2"/>`;
+        svg+=`<text x="${(x1+x2)/2}" y="${y-10}" fill="${BLUE}" font-size="13" font-weight="700" font-family="JetBrains Mono,monospace" text-anchor="middle" paint-order="stroke" stroke="white" stroke-width="4">${text}</text>`;
+    }
+
+    const c=L_TOTAL/2;
+    if (figure==='horiz-1x90'||figure==='horiz-custom') { drawHorizCut(c,'top',false,angle); }
+    else if (figure==='horiz-2x45') { const d=w*1.5,sD=d*scale; drawHorizCut(c-sD/2,'top',true,45); drawHorizCut(c+sD/2,'top',false,45); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
+    else if (figure==='te-horizontal') {
+        const cutW = w2 * scale / 2;
+        // FOND : juste le texte d'ouverture, pas de trait
+        svg+=`<text x="${c}" y="${yFond+sW/2+6}" fill="${BLUE}" font-size="13" font-weight="900" font-family="JetBrains Mono,monospace" text-anchor="middle" paint-order="stroke" stroke="white" stroke-width="4">${tr.svgOpen}: ${fmtVal(w2)} ${ul}</text>`;
+        // AILE 1 (ext/haut) : découpe bord à bord sur W2, rien à garder
+        svg+=`<rect x="${c-cutW}" y="${yAileExt}" width="${cutW*2}" height="${sH}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+        // AILE 2 (int/bas) : rien du tout
+    }
+    else if (figure==='montee-1x90'||figure==='montee-custom') { drawVertCut(c,'montee',false,angle); }
+    else if (figure==='montee-2x45') { const d=h*2,sD=d*scale; drawVertCut(c-sD/2,'montee',true,45); drawVertCut(c+sD/2,'montee',false,45); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
+    else if (figure==='descente-1x90'||figure==='descente-custom') { drawVertCut(c,'descente',false,angle); }
+    else if (figure==='descente-2x45') { const d=h*2,sD=d*scale; drawVertCut(c-sD/2,'descente',true,45); drawVertCut(c+sD/2,'descente',false,45); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
+    else if (figure==='obs-horiz') {
+        const b=obsD/Math.sin(Math.PI/4),sB=b*scale,sL=obsL*scale;
+        const x1=c-sB-sL/2,x2=c-sL/2,x3=c+sL/2,x4=c+sB+sL/2;
+        drawHorizCut(x1,'top',true,45); drawHorizCut(x2,'bottom',false,45);
+        drawHorizCut(x3,'bottom',true,45); drawHorizCut(x4,'top',false,45);
+        drawDimArrow(x1,x2,yEnd+40,`B=${fmtVal(b)}${ul}`); drawDimArrow(x2,x3,yEnd+40,`L=${fmtVal(obsL)}${ul}`); drawDimArrow(x3,x4,yEnd+40,`B=${fmtVal(b)}${ul}`);
+    }
+    else if (figure==='obs-vert') {
+        const b=obsD/Math.sin(Math.PI/4),sB=b*scale,sL=obsL*scale;
+        const x1=c-sB-sL/2,x2=c-sL/2,x3=c+sL/2,x4=c+sB+sL/2;
+        drawVertCut(x1,'montee',true,45); drawVertCut(x2,'descente',false,45);
+        drawVertCut(x3,'descente',true,45); drawVertCut(x4,'montee',false,45);
+        drawDimArrow(x1,x2,yEnd+45,`B=${fmtVal(b)}${ul}`); drawDimArrow(x2,x3,yEnd+45,`L=${fmtVal(obsL)}${ul}`); drawDimArrow(x3,x4,yEnd+45,`B=${fmtVal(b)}${ul}`);
+    }
+    svg+=`</svg>`;
+    document.getElementById('plan-svg').innerHTML=svg;
+    } catch(e) { console.error('renderPlan error:', e); }
+}
+
+// ═══════════════════════════════════════
+// GABARIT 2 — BAC SECONDAIRE (Té)
+// Découpe en bout : largeur = W1 - 10mm
+// Patte de recouvrement côté extérieur (bout libre)
+// ═══════════════════════════════════════
+function renderPlan2(w, h, w2) {
+  try {
+    const tr   = T[currentLang], ul = unitLabel();
+    const BLUE = '#0284c7', LBLUE = '#38bdf8';
+
+    // ── Même échelle verticale que renderPlan ──
+    const totalH = h + w2 + h;
+    const scaleV = 220 / totalH;
+    const sH = h * scaleV, sW = w2 * scaleV;
+    const yAileExt = 25, yFond = yAileExt + sH, yAileInt = yFond + sW, yEnd = yAileInt + sH;
+
+    // Profondeur de découpe = W1 - 10mm, patte ≤ 100mm
+    const cutDepthMM = Math.max(w - 10, 10);
+    const tabMM      = Math.min(cutDepthMM, TAB_MAX_MM);
+
+    // ── Même largeur SVG que renderPlan (900px) ──
+    const L_TOTAL = 900;
+    const xStart  = 50;
+    const xEnd    = L_TOTAL - 50;
+    const bWidth  = xEnd - xStart;
+
+    // Échelle horizontale : découpe + reste du bac (W2 × 1.5) dans bWidth
+    const totalRepMM = cutDepthMM + w2 * 1.5;
+    const scaleH  = bWidth / totalRepMM;
+    const cutDepth = cutDepthMM * scaleH;
+    const tabW     = tabMM     * scaleH;
+
+    // Côté INTÉRIEUR = droite (vers le bac principal) = xStart + cutDepth - tabW
+    // Côté EXTÉRIEUR = gauche (bout libre)             = xStart
+    // Donc : zone rouge de xStart à xStart+cutDepth
+    //        patte verte  de xStart+cutDepth-tabW à xStart+cutDepth (collée côté intérieur)
+    const xCut   = xStart + cutDepth;
+    const xTab   = xCut - tabW;          // départ patte verte (côté intérieur)
+
+    const bgColor  = darkMode ? '#0c1a2e' : '#f0f9ff';
+    const bgBorder = darkMode ? '#1e3a5f' : '#bae6fd';
+    const txtColor = darkMode ? '#7dd3fc' : BLUE;
+
+    let svg = `<svg viewBox="0 0 ${L_TOTAL} ${yEnd+75}" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <pattern id="cut2" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+            <line x1="0" y1="0" x2="0" y2="8" stroke="#ef4444" stroke-width="3"/>
+        </pattern>
+        <marker id="arr-c" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L0,8 L8,4 z" fill="${BLUE}"/>
+        </marker>
+    </defs>
+    <rect x="0" y="0" width="${L_TOTAL}" height="${yEnd+75}" fill="${darkMode?'#0c1a2e':'#ffffff'}"/>`;
+
+    // Corps du bac — séparateurs ailes/fond uniquement dans la partie intacte
+    svg += `<rect x="${xStart}" y="${yAileExt}" width="${bWidth}" height="${yEnd-yAileExt}" fill="${bgColor}" stroke="${bgBorder}" stroke-width="2"/>`;
+    svg += `<line x1="${xCut}" y1="${yFond}"    x2="${xEnd}" y2="${yFond}"    stroke="${bgBorder}" stroke-width="2"/>`;
+    svg += `<line x1="${xCut}" y1="${yAileInt}" x2="${xEnd}" y2="${yAileInt}" stroke="${bgBorder}" stroke-width="2"/>`;
+
+    // Labels (dans la partie intacte du bac, à droite de xCut)
+    const lblX = xCut + (xEnd - xCut) / 2;
+    const hD = fmtVal(h), w2D = fmtVal(w2);
+    svg += `<text x="${lblX}" y="${yAileExt+sH/2+5}"  fill="${txtColor}" font-size="13" font-weight="700" font-family="JetBrains Mono,monospace" text-anchor="middle">${tr.svgWing1} — H:${hD}${ul}</text>`;
+    svg += `<text x="${lblX}" y="${yFond+sW/2+6}"     fill="${txtColor}" font-size="18" font-weight="900" font-family="JetBrains Mono,monospace" text-anchor="middle">${tr.svgBase} — W:${w2D}${ul}</text>`;
+    svg += `<text x="${lblX}" y="${yAileInt+sH/2+5}"  fill="${txtColor}" font-size="13" font-weight="700" font-family="JetBrains Mono,monospace" text-anchor="middle">${tr.svgWing2} — H:${hD}${ul}</text>`;
+
+    // ── AILE 1 (ext/haut) ──
+    // Zone rouge (extérieur → intérieur, pleine largeur cutDepth)
+    svg += `<rect x="${xStart}" y="${yAileExt}" width="${cutDepth}" height="${sH}" fill="url(#cut2)" stroke="#ef4444" stroke-width="2"/>`;
+    // Patte verte collée côté intérieur (droite)
+    svg += `<rect x="${xTab}" y="${yAileExt}" width="${tabW}" height="${sH}" fill="#10b981" stroke="#047857" stroke-width="2"/>`;
+    svg += `<text x="${xTab+tabW/2}" y="${yAileExt+sH/2+5}" fill="#047857" font-size="11" font-weight="700" font-family="JetBrains Mono,monospace" text-anchor="middle">↔${fmtVal(tabMM)}${ul}</text>`;
+
+    // ── AILE 2 (int/bas) ──
+    svg += `<rect x="${xStart}" y="${yAileInt}" width="${cutDepth}" height="${sH}" fill="url(#cut2)" stroke="#ef4444" stroke-width="2"/>`;
+    svg += `<rect x="${xTab}" y="${yAileInt}" width="${tabW}" height="${sH}" fill="#10b981" stroke="#047857" stroke-width="2"/>`;
+    svg += `<text x="${xTab+tabW/2}" y="${yAileInt+sH/2+5}" fill="#047857" font-size="11" font-weight="700" font-family="JetBrains Mono,monospace" text-anchor="middle">↔${fmtVal(tabMM)}${ul}</text>`;
+
+    // Ligne limite découpe — ailes uniquement, pas sur le fond
+    svg += `<line x1="${xCut}" y1="${yAileExt}" x2="${xCut}" y2="${yFond}"    stroke="${BLUE}" stroke-width="2" stroke-dasharray="8,4"/>`;
+    svg += `<line x1="${xCut}" y1="${yAileInt}" x2="${xCut}" y2="${yEnd}"     stroke="${BLUE}" stroke-width="2" stroke-dasharray="8,4"/>`;
+
+    // ── Cotes ──
+    // Profondeur de découpe
+    svg += `<line x1="${xStart}" y1="${yEnd+18}" x2="${xCut}" y2="${yEnd+18}" stroke="${BLUE}" stroke-width="2" marker-start="url(#arr-c)" marker-end="url(#arr-c)"/>`;
+    svg += `<line x1="${xStart}" y1="${yEnd+10}" x2="${xStart}" y2="${yEnd+26}" stroke="${BLUE}" stroke-width="2"/>`;
+    svg += `<line x1="${xCut}"   y1="${yEnd+10}" x2="${xCut}"   y2="${yEnd+26}" stroke="${BLUE}" stroke-width="2"/>`;
+    svg += `<text x="${xStart+cutDepth/2}" y="${yEnd+36}" fill="${BLUE}" font-size="13" font-weight="700" font-family="JetBrains Mono,monospace" text-anchor="middle">W1−10mm = ${fmtVal(cutDepthMM)}${ul}</text>`;
+    // Patte
+    svg += `<line x1="${xTab}" y1="${yEnd+52}" x2="${xCut}" y2="${yEnd+52}" stroke="#047857" stroke-width="2" marker-start="url(#arr-c)" marker-end="url(#arr-c)"/>`;
+    svg += `<line x1="${xTab}" y1="${yEnd+44}" x2="${xTab}" y2="${yEnd+60}" stroke="#047857" stroke-width="2"/>`;
+    svg += `<line x1="${xCut}" y1="${yEnd+44}" x2="${xCut}" y2="${yEnd+60}" stroke="#047857" stroke-width="2"/>`;
+    svg += `<text x="${xTab+tabW/2}" y="${yEnd+72}" fill="#047857" font-size="13" font-weight="700" font-family="JetBrains Mono,monospace" text-anchor="middle">Patte: ${fmtVal(tabMM)}${ul}</text>`;
+
+    svg += `</svg>`;
+    document.getElementById('plan2-svg').innerHTML = svg;
+  } catch(e) {
+    console.error('renderPlan2 error:', e);
+    document.getElementById('plan2-svg').innerHTML = `<p style="color:red">Erreur: ${e.message}</p>`;
+  }
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+document.querySelectorAll('input').forEach(el => el.addEventListener('input', updateApp));
+document.querySelectorAll('.figure-block select').forEach(el => el.addEventListener('change', updateApp));
+// Restaurez dark mode
+if (localStorage.getItem('tfp-dark')==='1') { darkMode=true; document.documentElement.setAttribute('data-theme','dark'); document.getElementById('dark-toggle').classList.add('on'); }
+setLang('fr');
+</script>
+</body>
+</html>
