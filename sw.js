@@ -1,5 +1,5 @@
 // Service Worker — TrayForm Pro by Nexel
-const CACHE_NAME = 'trayformpro-v1';
+const CACHE_NAME = 'trayformpro-v3';
 const BASE = '/trayform-pro';
 const ASSETS = [
   `${BASE}/index.html`,
