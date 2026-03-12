@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.nexel_app.twa",
+        "sha256_cert_fingerprints": ["56:21:A8:FD:A4:CB:38:B2:A6:D4:E4:54:F0:F8:56:DC:D1:15:DC:69:DA:F4:BE:21:04:09:2C:95:E1:AE:21:0D"]
+      }
+    }]
