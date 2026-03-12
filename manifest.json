@@ -5,7 +5,7 @@
   "id": "com.nexel.trayformpro",
   "start_url": "/trayform-pro/index.html",
   "scope": "/trayform-pro/",
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#0284c7",
