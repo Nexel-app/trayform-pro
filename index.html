@@ -500,6 +500,8 @@
         .support-btn-primary:hover { background: #f0f9ff; transform: translateY(-1px); }
         .support-btn-secondary { background: rgba(255,255,255,0.15); color: white; border: 1.5px solid rgba(255,255,255,0.3); }
         .support-btn-secondary:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
+        .support-btn-bmc { background: #FFDD00; color: #000000; border: none; }
+        .support-btn-bmc:hover { background: #ffe833; transform: translateY(-1px); }
 
         /* MODAL CONTACT */
         .modal-overlay {
@@ -696,6 +698,8 @@
                 <select id="sel-obs" onchange="selectBlock('obs')" onclick="event.stopPropagation()">
                     <option value="obs-horiz">Obstacle Horizontal</option>
                     <option value="obs-vert">Saut de Loup (Vertical)</option>
+                    <option value="dec-horiz">Décalage Horizontal (2×45°)</option>
+                    <option value="dec-vert">Décalage Vertical (2×45°)</option>
                 </select>
             </div>
             <!-- Dérivation Té -->
@@ -743,6 +747,16 @@
                     <div class="input-label" id="label-L">Longueur (L)</div>
                 </div>
             </div>
+        </div>
+        <div class="group" id="distGroup">
+            <label id="label-dist">Distance entre coupes</label>
+            <input type="number" id="distVal" value="300" min="1">
+            <div class="input-label" id="label-dist-note">Minimum = W (ou H)</div>
+        </div>
+        <div class="group" id="obsCustomGroup">
+            <label id="label-obs-custom">Obstacle après l'angle (optionnel)</label>
+            <input type="number" id="obsCustomD" value="0" min="0" placeholder="0 = sans obstacle">
+            <div class="input-label" id="label-obs-custom-note">Profondeur obstacle (D)</div>
         </div>
     </div>
 
@@ -814,6 +828,14 @@
         <div class="support-buttons">
             <a class="support-btn support-btn-primary" href="https://paypal.me/Nexelapp" target="_blank" rel="noopener">
                 💳 <span id="support-donate">Contribution</span>
+            </a>
+            <a class="support-btn support-btn-bmc" href="https://buymeacoffee.com/Nexel" target="_blank" rel="noopener">
+                ☕ <span id="support-bmc">Café</span>
+            </a>
+        </div>
+        <div class="support-buttons" style="margin-top:8px;">
+            <a class="support-btn support-btn-secondary" href="https://play.google.com/store/apps/details?id=com.nexel.trayformpro" target="_blank" rel="noopener">
+                ⭐ <span id="support-rate">Noter l'app</span>
             </a>
         </div>
     </div>
@@ -923,7 +945,7 @@ const T = {
         labelDims:"Dimensions du bac principal",
         labelW:"Largeur (W)", labelH:"Hauteur (H)", labelAngle:"Angle sur-mesure (°)",
         labelSecondary:"Largeur bac secondaire — Té", labelObstacle:"Dimensions de l'obstacle",
-        labelD:"Déport (D)", labelL:"Longueur (L)",
+        labelD:"Déport (D)", labelL:"Longueur (L)", labelDist:"Distance entre coupes", labelObsCustom:"Obstacle après l'angle (optionnel)", labelObsCustomNote:"Profondeur obstacle (D)", dimPosCut:"Position de coupe (V)", dimDispo:"Longueur disponible", dimObsTooClose:"⚠️ Obstacle trop proche",
         legendCut:"Zone à découper", legendTab:"Patte de recouvrement (NE PAS couper)", legendFold:"Axe de pliage",
         btnPrint:"Imprimer le gabarit", ddLangLabel:"Langue",
         ddDarkLabel:"Mode sombre", ddContactLabel:"Nous contacter",
@@ -931,7 +953,7 @@ const T = {
         blockObs:"Contournement", blockTe:"Dérivation en Té",
         selHoriz:["90° Simple","90° Large (2×45°)","Sur-Mesure"],
         selVert:["Montée 90°","Montée 2×45°","Montée Sur-Mesure","Descente 90°","Descente 2×45°","Descente Sur-Mesure"],
-        selObs:["Obstacle Horizontal","Saut de Loup (Vertical)"],
+        selObs:["Obstacle Horizontal","Saut de Loup (Vertical)","Décalage Horizontal (2×45°)","Décalage Vertical (2×45°)"],
         selTe:["Té Horizontal"],
         svgWing1:"AILE 1", svgBase:"FOND", svgWing2:"AILE 2", svgOpen:"Ouverture",
         step1:"<strong>Dépliez mentalement le bac :</strong> FOND au centre, AILE 1 en haut, AILE 2 en bas.",
@@ -947,7 +969,7 @@ const T = {
         errorObs:"Déport obstacle > 0 requis.", errorAngle:"Angle entre 1° et 89°.",
         supportTitle:"Soutenir le créateur",
         supportSub:"TrayForm Pro est gratuit et sans publicité.<br>Si l'app vous fait gagner du temps sur le chantier, un petit geste est toujours apprécié !",
-        supportDonate:"Contribution", footerRights:"Tous droits réservés",
+        supportDonate:"Contribution", supportBmc:"Offrir un café", supportRate:"Noter l'app", footerRights:"Tous droits réservés",
         contactTitle:"Nous contacter", contactSub:"Une question, un bug ou une suggestion ? On vous répond rapidement.",
         epiTitle:"Équipements de Protection Individuelle obligatoires avant toute coupe",
         epiGloves:"Gants anti-coupures", epiGlasses:"Lunettes de protection", epiHearing:"Protection auditive",
@@ -961,7 +983,7 @@ const T = {
         labelDims:"Main tray dimensions",
         labelW:"Width (W)", labelH:"Height (H)", labelAngle:"Custom angle (°)",
         labelSecondary:"Secondary tray width — T-junction", labelObstacle:"Obstacle dimensions",
-        labelD:"Offset (D)", labelL:"Length (L)",
+        labelD:"Offset (D)", labelL:"Length (L)", labelDist:"Distance between cuts", labelObsCustom:"Obstacle after angle (optional)", labelObsCustomNote:"Obstacle depth (D)", dimPosCut:"Cut position (V)", dimDispo:"Available length", dimObsTooClose:"⚠️ Obstacle too close",
         legendCut:"Cut zone", legendTab:"Overlap tab (DO NOT cut)", legendFold:"Fold axis",
         btnPrint:"Print template", ddLangLabel:"Language",
         ddDarkLabel:"Dark mode", ddContactLabel:"Contact us",
@@ -969,7 +991,7 @@ const T = {
         blockObs:"Bypass", blockTe:"T-Junction",
         selHoriz:["Simple 90°","Wide 90° (2×45°)","Custom"],
         selVert:["Rise 90°","Rise 2×45°","Custom Rise","Drop 90°","Drop 2×45°","Custom Drop"],
-        selObs:["Horizontal Obstacle","Wolf Jump (Vertical)"],
+        selObs:["Horizontal Obstacle","Wolf Jump (Vertical)","Horizontal Offset (2×45°)","Vertical Offset (2×45°)"],
         selTe:["Horizontal T"],
         svgWing1:"FLANGE 1", svgBase:"BASE", svgWing2:"FLANGE 2", svgOpen:"Opening",
         step1:"<strong>Mentally unfold the tray:</strong> BASE in center, FLANGE 1 on top, FLANGE 2 on bottom.",
@@ -985,7 +1007,7 @@ const T = {
         errorObs:"Obstacle offset must be > 0.", errorAngle:"Angle must be between 1° and 89°.",
         supportTitle:"Support the creator",
         supportSub:"TrayForm Pro is free and ad-free.<br>If the app saves you time on site, a small gesture is always appreciated!",
-        supportDonate:"Contribution", footerRights:"All rights reserved",
+        supportDonate:"Contribution", supportBmc:"Buy a coffee", supportRate:"Rate the app", footerRights:"All rights reserved",
         contactTitle:"Contact us", contactSub:"A question, a bug or a suggestion? We reply quickly.",
         epiTitle:"Personal Protective Equipment required before any cutting",
         epiGloves:"Cut-resistant gloves", epiGlasses:"Safety glasses", epiHearing:"Hearing protection",
@@ -999,7 +1021,7 @@ const T = {
         labelDims:"Dimensiones de la bandeja principal",
         labelW:"Ancho (W)", labelH:"Alto (H)", labelAngle:"Ángulo personalizado (°)",
         labelSecondary:"Ancho bandeja secundaria — T", labelObstacle:"Dimensiones del obstáculo",
-        labelD:"Desviación (D)", labelL:"Longitud (L)",
+        labelD:"Desviación (D)", labelL:"Longitud (L)", labelDist:"Distancia entre cortes", labelObsCustom:"Obstáculo tras el ángulo (opc.)", labelObsCustomNote:"Profundidad obstáculo (D)", dimPosCut:"Posición de corte (V)", dimDispo:"Longitud disponible", dimObsTooClose:"⚠️ Obstáculo demasiado cerca",
         legendCut:"Zona a cortar", legendTab:"Lengüeta (NO cortar)", legendFold:"Eje de plegado",
         btnPrint:"Imprimir plantilla", ddLangLabel:"Idioma",
         ddDarkLabel:"Modo oscuro", ddContactLabel:"Contáctenos",
@@ -1007,7 +1029,7 @@ const T = {
         blockObs:"Desvío", blockTe:"Derivación en T",
         selHoriz:["90° Simple","90° Amplio (2×45°)","Personalizado"],
         selVert:["Subida 90°","Subida 2×45°","Subida Personalizada","Bajada 90°","Bajada 2×45°","Bajada Personalizada"],
-        selObs:["Obstáculo Horizontal","Salto de Lobo (Vertical)"],
+        selObs:["Obstáculo Horizontal","Salto de Lobo (Vertical)","Desviación Horizontal (2×45°)","Desviación Vertical (2×45°)"],
         selTe:["T Horizontal"],
         svgWing1:"ALA 1", svgBase:"FONDO", svgWing2:"ALA 2", svgOpen:"Apertura",
         step1:"<strong>Despliega mentalmente la bandeja:</strong> FONDO al centro, ALA 1 arriba, ALA 2 abajo.",
@@ -1023,7 +1045,7 @@ const T = {
         errorObs:"Desviación > 0.", errorAngle:"Ángulo entre 1° y 89°.",
         supportTitle:"Apoyar al creador",
         supportSub:"TrayForm Pro es gratuito y sin publicidad.<br>¡Un pequeño gesto siempre se agradece!",
-        supportDonate:"Contribución", footerRights:"Todos los derechos reservados",
+        supportDonate:"Contribución", supportBmc:"Invitar un café", supportRate:"Calificar la app", footerRights:"Todos los derechos reservados",
         contactTitle:"Contáctenos", contactSub:"¿Pregunta, error o sugerencia? Respondemos rápido.",
         epiTitle:"Equipos de Protección Individual obligatorios antes de cortar",
         epiGloves:"Guantes anticorte", epiGlasses:"Gafas de protección", epiHearing:"Protección auditiva",
@@ -1037,7 +1059,7 @@ const T = {
         labelDims:"Abmessungen der Haupttasse",
         labelW:"Breite (W)", labelH:"Höhe (H)", labelAngle:"Benutzerdefinierter Winkel (°)",
         labelSecondary:"Breite Nebentasse — T-Stück", labelObstacle:"Hindernisabmessungen",
-        labelD:"Versatz (D)", labelL:"Länge (L)",
+        labelD:"Versatz (D)", labelL:"Länge (L)", labelDist:"Abstand zwischen Schnitten", labelObsCustom:"Hindernis nach Winkel (opt.)", labelObsCustomNote:"Hindernistiefe (D)", dimPosCut:"Schnittposition (V)", dimDispo:"Verfügbare Länge", dimObsTooClose:"⚠️ Hindernis zu nah",
         legendCut:"Schnittzone", legendTab:"Überlappungslasche (NICHT schneiden)", legendFold:"Biegeachse",
         btnPrint:"Schablone drucken", ddLangLabel:"Sprache",
         ddDarkLabel:"Dunkelmodus", ddContactLabel:"Kontaktieren Sie uns",
@@ -1045,7 +1067,7 @@ const T = {
         blockObs:"Umgehung", blockTe:"T-Abzweigung",
         selHoriz:["Einfach 90°","Breit 90° (2×45°)","Benutzerdefiniert"],
         selVert:["Aufstieg 90°","Aufstieg 2×45°","Aufstieg Custom","Abstieg 90°","Abstieg 2×45°","Abstieg Custom"],
-        selObs:["Horizontales Hindernis","Wolfsprung (Vertikal)"],
+        selObs:["Horizontales Hindernis","Wolfsprung (Vertikal)","Horizontaler Versatz (2×45°)","Vertikaler Versatz (2×45°)"],
         selTe:["Horizontales T-Stück"],
         svgWing1:"FLANSCH 1", svgBase:"BODEN", svgWing2:"FLANSCH 2", svgOpen:"Öffnung",
         step1:"<strong>Gedanklich abwickeln:</strong> BODEN Mitte, FLANSCH 1 oben, FLANSCH 2 unten.",
@@ -1061,7 +1083,7 @@ const T = {
         errorObs:"Versatz > 0.", errorAngle:"Winkel 1°–89°.",
         supportTitle:"Den Entwickler unterstützen",
         supportSub:"TrayForm Pro ist kostenlos und werbefrei.<br>Eine kleine Geste ist immer willkommen!",
-        supportDonate:"Beitrag", footerRights:"Alle Rechte vorbehalten",
+        supportDonate:"Beitrag", supportBmc:"Kaffee spendieren", supportRate:"App bewerten", footerRights:"Alle Rechte vorbehalten",
         contactTitle:"Kontakt", contactSub:"Frage, Fehler oder Vorschlag? Wir antworten schnell.",
         epiTitle:"Persönliche Schutzausrüstung vor jedem Schnitt erforderlich",
         epiGloves:"Schnittschutzhandschuhe", epiGlasses:"Schutzbrille", epiHearing:"Gehörschutz",
@@ -1075,7 +1097,7 @@ const T = {
         labelDims:"主桥架尺寸",
         labelW:"宽度 (W)", labelH:"高度 (H)", labelAngle:"自定义角度（°）",
         labelSecondary:"副桥架宽度 — T形", labelObstacle:"障碍物尺寸",
-        labelD:"偏移量 (D)", labelL:"长度 (L)",
+        labelD:"偏移量 (D)", labelL:"长度 (L)", labelDist:"切割间距", labelObsCustom:"转角后障碍物（可选）", labelObsCustomNote:"障碍物深度 (D)", dimPosCut:"切割位置 (V)", dimDispo:"可用长度", dimObsTooClose:"⚠️ 障碍物太近",
         legendCut:"切割区域", legendTab:"搭接片（勿切）", legendFold:"折弯轴",
         btnPrint:"打印模板", ddLangLabel:"语言",
         ddDarkLabel:"深色模式", ddContactLabel:"联系我们",
@@ -1083,7 +1105,7 @@ const T = {
         blockObs:"绕障", blockTe:"T形分支",
         selHoriz:["简单90°","宽90°(2×45°)","自定义"],
         selVert:["上升90°","上升2×45°","自定义上升","下降90°","下降2×45°","自定义下降"],
-        selObs:["水平障碍","垂直绕障"],
+        selObs:["水平障碍","垂直绕障","水平偏移 (2×45°)","垂直偏移 (2×45°)"],
         selTe:["水平T形"],
         svgWing1:"侧翼1", svgBase:"底板", svgWing2:"侧翼2", svgOpen:"开口",
         step1:"<strong>展开桥架：</strong>底板居中，侧翼1在上，侧翼2在下。",
@@ -1099,7 +1121,7 @@ const T = {
         errorObs:"偏移>0。", errorAngle:"角度1°~89°。",
         supportTitle:"支持创作者",
         supportSub:"TrayForm Pro 免费且无广告。<br>您的支持将不胜感激！",
-        supportDonate:"贡献", footerRights:"版权所有",
+        supportDonate:"贡献", supportBmc:"请我喝咖啡", supportRate:"评价应用", footerRights:"版权所有",
         contactTitle:"联系我们", contactSub:"问题、错误或建议？我们会快速回复。",
         epiTitle:"切割前必须佩戴个人防护装备",
         epiGloves:"防割手套", epiGlasses:"防护眼镜", epiHearing:"听力保护",
@@ -1113,7 +1135,7 @@ const T = {
         labelDims:"メインラック寸法",
         labelW:"幅 (W)", labelH:"高さ (H)", labelAngle:"カスタム角度（°）",
         labelSecondary:"サブラック幅 — T字", labelObstacle:"障害物寸法",
-        labelD:"オフセット (D)", labelL:"長さ (L)",
+        labelD:"オフセット (D)", labelL:"長さ (L)", labelDist:"切断間距離", labelObsCustom:"角度後の障害物（任意）", labelObsCustomNote:"障害物の深さ (D)", dimPosCut:"切断位置 (V)", dimDispo:"利用可能な長さ", dimObsTooClose:"⚠️ 障害物が近すぎます",
         legendCut:"切断ゾーン", legendTab:"重ねタブ（切断禁止）", legendFold:"折り曲げ軸",
         btnPrint:"テンプレート印刷", ddLangLabel:"言語",
         ddDarkLabel:"ダークモード", ddContactLabel:"お問い合わせ",
@@ -1121,7 +1143,7 @@ const T = {
         blockObs:"迂回", blockTe:"T字分岐",
         selHoriz:["単純90°","広幅90°(2×45°)","カスタム"],
         selVert:["上昇90°","上昇2×45°","カスタム上昇","下降90°","下降2×45°","カスタム下降"],
-        selObs:["水平障害物","垂直迂回"],
+        selObs:["水平障害物","垂直迂回","水平オフセット (2×45°)","垂直オフセット (2×45°)"],
         selTe:["水平T字"],
         svgWing1:"フランジ1", svgBase:"底板", svgWing2:"フランジ2", svgOpen:"開口部",
         step1:"<strong>ラックを展開：</strong>底板中央、フランジ1上、フランジ2下。",
@@ -1137,7 +1159,7 @@ const T = {
         errorObs:"オフセット>0。", errorAngle:"角度1°〜89°。",
         supportTitle:"クリエイターを応援",
         supportSub:"TrayForm Proは無料・広告なし。<br>応援よろしくお願いします！",
-        supportDonate:"貢献", footerRights:"全著作権所有",
+        supportDonate:"貢献", supportBmc:"コーヒーをおごる", supportRate:"アプリを評価", footerRights:"全著作権所有",
         contactTitle:"お問い合わせ", contactSub:"質問・バグ・提案はこちら。",
         epiTitle:"切断前に個人用保護具の着用が必須です",
         epiGloves:"耐切創手袋", epiGlasses:"保護メガネ", epiHearing:"聴覚保護具",
@@ -1166,6 +1188,8 @@ function setLang(lang) {
         'label-dims':tr.labelDims,'label-W':tr.labelW,'label-H':tr.labelH,
         'label-angle':tr.labelAngle,'label-secondary':tr.labelSecondary,
         'label-obstacle':tr.labelObstacle,'label-D':tr.labelD,'label-L':tr.labelL,
+        'label-dist':tr.labelDist,
+        'label-obs-custom':tr.labelObsCustom,'label-obs-custom-note':tr.labelObsCustomNote,
         'legend-cut':tr.legendCut,'legend-tab':tr.legendTab,'legend-fold':tr.legendFold,
         'label-print':tr.btnPrint,'dd-lang-label':tr.ddLangLabel,
         'dd-dark-label':tr.ddDarkLabel,'dd-contact-label':tr.ddContactLabel,
@@ -1174,7 +1198,7 @@ function setLang(lang) {
         'step1':tr.step1,'step2':tr.step2,'step3':tr.step3,
         'step5':tr.step5,'step6':tr.step6,
         'support-title':tr.supportTitle,'support-subtitle':tr.supportSub,
-        'support-donate':tr.supportDonate,
+        'support-donate':tr.supportDonate,'support-bmc':tr.supportBmc,'support-rate':tr.supportRate,
         'footer-rights':tr.footerRights,
         'contact-title':tr.contactTitle,'contact-sub':tr.contactSub,
         'contact-email-desc':tr.contactEmailDesc,'contact-bmc-desc':tr.contactBmcDesc,
@@ -1198,7 +1222,7 @@ function setLang(lang) {
     rebuildSelect('sel-vert',
         ['montee-1x90','montee-2x45','montee-custom','descente-1x90','descente-2x45','descente-custom'], tr.selVert);
     rebuildSelect('sel-obs',
-        ['obs-horiz','obs-vert'], tr.selObs);
+        ['obs-horiz','obs-vert','dec-horiz','dec-vert'], tr.selObs);
     rebuildSelect('sel-te',
         ['te-horizontal'], tr.selTe);
 
@@ -1231,11 +1255,25 @@ function updateApp() {
     const customA = parseFloat(document.getElementById('customAngle').value)||45;
     const obsDRaw = parseFloat(document.getElementById('obsD').value)||0;
     const obsLRaw = parseFloat(document.getElementById('obsL').value)||0;
-    const w=toMM(wRaw), h=toMM(hRaw), w2=toMM(w2Raw), obsD=toMM(obsDRaw), obsL=toMM(obsLRaw);
+    const distRaw = parseFloat(document.getElementById('distVal').value)||0;
+    const obsCustomDRaw = parseFloat(document.getElementById('obsCustomD').value)||0;
+    const w=toMM(wRaw), h=toMM(hRaw), w2=toMM(w2Raw), obsD=toMM(obsDRaw), obsL=toMM(obsLRaw), dist=toMM(distRaw), obsCustomD=toMM(obsCustomDRaw);
 
     document.getElementById('secondaryGroup').style.display = figure==='te-horizontal' ? 'block':'none';
-    document.getElementById('obstacleGroup').style.display  = figure.includes('obs')   ? 'block':'none';
+    document.getElementById('obstacleGroup').style.display  = (figure==='obs-horiz'||figure==='obs-vert') ? 'block':'none';
     document.getElementById('angleGroup').style.display     = figure.includes('custom')? 'block':'none';
+    document.getElementById('obsCustomGroup').style.display = figure.includes('custom') ? 'block':'none';
+    // Champ distance entre coupes : 2x45 horiz/vert + décalages
+    const needDist = figure==='horiz-2x45'||figure==='montee-2x45'||figure==='descente-2x45'||figure==='dec-horiz'||figure==='dec-vert';
+    document.getElementById('distGroup').style.display = needDist ? 'block':'none';
+    // Mise à jour label et minimum selon figure
+    if (needDist) {
+        const minRef = (figure==='montee-2x45'||figure==='descente-2x45'||figure==='dec-vert') ? h : w;
+        const distIn = document.getElementById('distVal');
+        distIn.min = fromMM(minRef);
+        if (parseFloat(distIn.value) < fromMM(minRef)) distIn.value = Math.ceil(fromMM(minRef));
+        document.getElementById('label-dist-note').textContent = 'min. ' + fmtVal(minRef) + unitLabel();
+    }
 
     let angle=45;
     if (figure.includes('1x90'))   angle=90;
@@ -1252,9 +1290,9 @@ function updateApp() {
     else if (figure==='te-horizontal') step4.innerHTML=tr.step4_te;
     else step4.innerHTML=tr.step4_std;
 
-    renderMiniature(figure,w,h,w2,obsD,obsL,angle);
-    renderPlan(figure,w,h,w2,obsD,obsL,angle);
-    renderDims(figure,w,h,w2,obsD,obsL,angle);
+    renderMiniature(figure,w,h,w2,obsD,obsL,angle,dist);
+    renderPlan(figure,w,h,w2,obsD,obsL,angle,dist);
+    renderDims(figure,w,h,w2,obsD,obsL,angle,dist,obsCustomD);
     // Gabarit 2 : uniquement pour le Té
     const plan2El = document.getElementById('plan2-container');
     if (figure==='te-horizontal') {
@@ -1268,7 +1306,7 @@ function updateApp() {
 // ═══════════════════════════════════════
 // ENCOMBREMENT APRÈS PLIAGE
 // ═══════════════════════════════════════
-function renderDims(figure,w,h,w2,obsD,obsL,angle) {
+function renderDims(figure,w,h,w2,obsD,obsL,angle,dist,obsCustomD=0) {
     const tr = T[currentLang], ul = unitLabel();
     const el = document.getElementById('dims-content');
 
@@ -1286,13 +1324,39 @@ function renderDims(figure,w,h,w2,obsD,obsL,angle) {
         html += row(tr.dimLenFinie, f(w));
 
     } else if (figure==='horiz-2x45') {
-        html += row(tr.dimLenFinie, f(w + w*1.5));
+        const d = dist>0 ? dist : w*1.5;
+        html += row(tr.dimLenFinie, f(w + d));
+
+    } else if (figure==='horiz-custom') {
+        const V = w * Math.tan(angle/2 * Math.PI/180);
+        html += row(tr.dimPosCut, f(V));
+        if (obsCustomD > 0) {
+            const dispo = obsCustomD - w;
+            html += row(tr.dimDispo, dispo >= 0 ? f(dispo) : tr.dimObsTooClose);
+        }
+
+    } else if (figure==='dec-horiz') {
+        const d = dist>0 ? dist : w*1.5;
+        html += row(tr.dimLenFinie, f(d));
 
     } else if (figure==='montee-1x90'||figure==='descente-1x90') {
         html += row(tr.dimLenFinie, f(h));
 
     } else if (figure==='montee-2x45'||figure==='descente-2x45') {
-        html += row(tr.dimLenFinie, f(h + h*2));
+        const d = dist>0 ? dist : h*2;
+        html += row(tr.dimLenFinie, f(h + d));
+
+    } else if (figure==='montee-custom'||figure==='descente-custom') {
+        const V = h * Math.tan(angle/2 * Math.PI/180);
+        html += row(tr.dimPosCut, f(V));
+        if (obsCustomD > 0) {
+            const dispo = obsCustomD - h;
+            html += row(tr.dimDispo, dispo >= 0 ? f(dispo) : tr.dimObsTooClose);
+        }
+
+    } else if (figure==='dec-vert') {
+        const d = dist>0 ? dist : h*2;
+        html += row(tr.dimLenFinie, f(d));
 
     } else if (figure==='te-horizontal') {
         html += row('BAC 1 — ' + tr.dimLargeur, f(w));
@@ -1312,7 +1376,7 @@ function renderDims(figure,w,h,w2,obsD,obsL,angle) {
 // ═══════════════════════════════════════
 // MINIATURE
 // ═══════════════════════════════════════
-function renderMiniature(figure,w,h,w2,obsD,obsL,angle) {
+function renderMiniature(figure,w,h,w2,obsD,obsL,angle,dist) {
     const BLUE='#0284c7', LBLUE='#38bdf8';
     const fillColor = darkMode ? '#1e3a5f' : 'url(#metalGrad)';
     let svg=`<svg viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
@@ -1344,6 +1408,8 @@ function renderMiniature(figure,w,h,w2,obsD,obsL,angle) {
     else if (figure.includes('descente-custom')){ svg+=`<path d="M 35 25 L 135 25 L 215 90 L 185 130 L 105 70 L 35 70 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; dimLine(105,185,15,`α=${angle}°`); }
     else if (figure==='obs-horiz'){ svg+=`<path d="M 15 115 L 90 115 L 140 65 L 255 65 L 305 115 L 385 115 L 385 85 L 315 85 L 260 35 L 130 35 L 80 85 L 15 85 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; }
     else if (figure==='obs-vert') { svg+=`<path d="M 15 120 L 90 120 L 140 60 L 255 60 L 305 120 L 385 120 L 385 90 L 315 90 L 260 30 L 130 30 L 80 90 L 15 90 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; }
+    else if (figure==='dec-horiz'){ svg+=`<path d="M 15 100 L 100 100 L 180 50 L 385 50 L 385 20 L 165 20 L 80 70 L 15 70 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; }
+    else if (figure==='dec-vert') { svg+=`<path d="M 35 130 L 135 130 L 185 70 L 185 20 L 155 20 L 155 60 L 105 120 L 35 120 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; }
     svg+=`</svg>`;
     document.getElementById('preview-svg').innerHTML=svg;
 }
@@ -1351,7 +1417,7 @@ function renderMiniature(figure,w,h,w2,obsD,obsL,angle) {
 // ═══════════════════════════════════════
 // GABARIT
 // ═══════════════════════════════════════
-function renderPlan(figure,w,h,w2,obsD,obsL,angle) {
+function renderPlan(figure,w,h,w2,obsD,obsL,angle,dist) {
     try {
     const tr=T[currentLang], ul=unitLabel();
     const BLUE='#0284c7', LBLUE='#38bdf8';
@@ -1360,8 +1426,10 @@ function renderPlan(figure,w,h,w2,obsD,obsL,angle) {
     const yAileExt=25, yFond=yAileExt+sH, yAileInt=yFond+sW, yEnd=yAileInt+sH;
     const biais45=obsD/Math.sin(Math.PI/4);
     let L_TOTAL=900;
-    if (figure.includes('obs')) L_TOTAL=Math.max(900,120+biais45*scale*2+obsL*scale+120);
-    else if (figure.includes('2x45')) { const d=(figure.includes('montee')||figure.includes('descente'))?h*2:w*1.5; L_TOTAL=Math.max(700,240+d*scale*2); }
+    if (figure==='obs-horiz'||figure==='obs-vert') L_TOTAL=Math.max(900,120+biais45*scale*2+obsL*scale+120);
+    else if (figure==='horiz-2x45') { const d=dist>0?dist:w*1.5; L_TOTAL=Math.max(700,240+d*scale*2); }
+    else if (figure==='montee-2x45'||figure==='descente-2x45') { const d=dist>0?dist:h*2; L_TOTAL=Math.max(700,240+d*scale*2); }
+    else if (figure==='dec-horiz'||figure==='dec-vert') { const d=dist>0?dist:w*1.5; L_TOTAL=Math.max(700,240+d*scale*2); }
 
     const bgColor = darkMode ? '#0c1a2e' : '#f0f9ff';
     const bgBorder = darkMode ? '#1e3a5f' : '#bae6fd';
@@ -1443,7 +1511,8 @@ function renderPlan(figure,w,h,w2,obsD,obsL,angle) {
 
     const c=L_TOTAL/2;
     if (figure==='horiz-1x90'||figure==='horiz-custom') { drawHorizCut(c,'top',false,angle); }
-    else if (figure==='horiz-2x45') { const d=w*1.5,sD=d*scale; drawHorizCut(c-sD/2,'top',true,45); drawHorizCut(c+sD/2,'top',false,45); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
+    else if (figure==='horiz-2x45') { const d=dist>0?dist:w*1.5,sD=d*scale; drawHorizCut(c-sD/2,'top',true,45); drawHorizCut(c+sD/2,'top',false,45); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
+    else if (figure==='dec-horiz')  { const d=dist>0?dist:w*1.5,sD=d*scale; drawHorizCut(c-sD/2,'top',true,45); drawHorizCut(c+sD/2,'bottom',true,45); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
     else if (figure==='te-horizontal') {
         const cutW = w2 * scale / 2;
         // FOND : juste le texte d'ouverture, pas de trait
@@ -1453,9 +1522,10 @@ function renderPlan(figure,w,h,w2,obsD,obsL,angle) {
         // AILE 2 (int/bas) : rien du tout
     }
     else if (figure==='montee-1x90'||figure==='montee-custom') { drawVertCut(c,'montee',false,angle); }
-    else if (figure==='montee-2x45') { const d=h*2,sD=d*scale; drawVertCut(c-sD/2,'montee',true,45); drawVertCut(c+sD/2,'montee',false,45); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
+    else if (figure==='montee-2x45') { const d=dist>0?dist:h*2,sD=d*scale; drawVertCut(c-sD/2,'montee',true,45); drawVertCut(c+sD/2,'montee',false,45); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
     else if (figure==='descente-1x90'||figure==='descente-custom') { drawVertCut(c,'descente',false,angle); }
-    else if (figure==='descente-2x45') { const d=h*2,sD=d*scale; drawVertCut(c-sD/2,'descente',true,45); drawVertCut(c+sD/2,'descente',false,45); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
+    else if (figure==='descente-2x45') { const d=dist>0?dist:h*2,sD=d*scale; drawVertCut(c-sD/2,'descente',true,45); drawVertCut(c+sD/2,'descente',false,45); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
+    else if (figure==='dec-vert')     { const d=dist>0?dist:h*2,sD=d*scale; drawVertCut(c-sD/2,'montee',true,45); drawVertCut(c+sD/2,'descente',true,45); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
     else if (figure==='obs-horiz') {
         const b=obsD/Math.sin(Math.PI/4),sB=b*scale,sL=obsL*scale;
         const x1=c-sB-sL/2,x2=c-sL/2,x3=c+sL/2,x4=c+sB+sL/2;
