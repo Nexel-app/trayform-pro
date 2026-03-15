@@ -410,20 +410,32 @@
         /* STEPS */
         .step {
             display: flex; align-items: flex-start; gap: 12px;
-            margin-bottom: 10px; padding: 12px;
+            margin-bottom: 8px; padding: 12px 14px;
             background: var(--bg-step);
-            border: 1px solid var(--blue-border);
-            border-radius: 10px;
+            border: 1.5px solid var(--blue-border);
+            border-radius: 12px;
+            transition: border-color 0.2s;
         }
         .step:last-child { margin-bottom: 0; }
+        .step:hover { border-color: var(--blue-mid); }
         .step-number {
-            background: var(--blue-mid); color: white;
-            font-weight: 700; width: 24px; height: 24px;
+            background: linear-gradient(135deg, var(--blue-mid), var(--blue-dark));
+            color: white; font-weight: 800;
+            width: 28px; height: 28px; min-width: 28px;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 50%; flex-shrink: 0; font-size: 12px; margin-top: 1px;
+            border-radius: 50%; flex-shrink: 0; font-size: 13px;
+            margin-top: 1px; box-shadow: 0 2px 6px rgba(2,132,199,0.3);
         }
-        .step-text { font-size: 13px; line-height: 1.6; color: var(--text-muted); }
-        .step-text strong { color: var(--blue-dark); }
+        .step-body { display: flex; flex-direction: column; gap: 2px; }
+        .step-icon { font-size: 16px; line-height: 1; margin-bottom: 2px; }
+        .step-text { font-size: 13px; line-height: 1.65; color: var(--text-muted); }
+        .step-text strong { color: var(--blue-dark); font-weight: 700; }
+        .step-tip {
+            font-size: 11px; color: var(--blue-mid); font-style: italic;
+            margin-top: 3px; padding: 4px 8px;
+            background: var(--blue-bg); border-radius: 6px;
+            border-left: 3px solid var(--blue-light);
+        }
 
         /* SUPPORT */
         /* DIMENSIONS */
@@ -578,10 +590,10 @@
     <div class="modal">
         <div class="modal-title" id="contact-title">Nous contacter</div>
         <div class="modal-sub" id="contact-sub">Une question, un bug ou une suggestion ? On vous répond rapidement.</div>
-        <a class="modal-contact-item" href="mailto:nexeladmin@gmail.com">
+        <a class="modal-contact-item" href="/cdn-cgi/l/email-protection#543a312c31383530393d3a143339353d387a373b39">
             <div class="modal-contact-icon">✉️</div>
             <div>
-                <div class="modal-contact-text">nexeladmin@gmail.com</div>
+                <div class="modal-contact-text"><span class="__cf_email__" data-cfemail="19777c617c75787d747077597e74787075377a7674">[email&#160;protected]</span></div>
                 <div class="modal-contact-desc" id="contact-email-desc">Support & questions générales</div>
             </div>
         </a>
@@ -722,7 +734,7 @@
 
         <div class="group" id="angleGroup">
             <label id="label-angle">Angle sur-mesure (°)</label>
-            <input type="number" id="customAngle" value="45" min="1" max="89">
+            <input type="number" id="customAngle" value="45" min="1" max="120">
         </div>
         <div class="group" id="secondaryGroup">
             <label id="label-secondary">Largeur bac secondaire — Té</label>
@@ -761,7 +773,7 @@
 
     <!-- GABARIT -->
     <div class="card" id="plan-container">
-        <div class="card-title">📐 <span id="title-plan">Gabarit de Traçage</span></div>
+        <div class="card-title">📐 <span id="title-plan">Schéma de Traçage</span></div>
         <div class="legend">
             <div class="legend-item"><div class="box-red"></div><span id="legend-cut">Zone à découper</span></div>
             <div class="legend-item"><div class="box-green"></div><span id="legend-tab">Patte de recouvrement</span></div>
@@ -802,12 +814,11 @@
     <!-- STEPS -->
     <div class="card" id="steps-container">
         <div class="card-title">🛠️ <span id="title-steps">Mode Opératoire</span></div>
-        <div class="step"><div class="step-number">1</div><div class="step-text" id="step1"></div></div>
-        <div class="step"><div class="step-number">2</div><div class="step-text" id="step2"></div></div>
-        <div class="step"><div class="step-number">3</div><div class="step-text" id="step3"></div></div>
-        <div class="step"><div class="step-number">4</div><div class="step-text" id="step4"></div></div>
-        <div class="step"><div class="step-number">5</div><div class="step-text" id="step5"></div></div>
-        <div class="step"><div class="step-number">6</div><div class="step-text" id="step6"></div></div>
+        <div class="step"><div class="step-number">1</div><div class="step-body"><div class="step-icon">📐</div><div class="step-text" id="step1"></div></div></div>
+        <div class="step"><div class="step-number">2</div><div class="step-body"><div class="step-icon">✏️</div><div class="step-text" id="step2"></div></div></div>
+        <div class="step"><div class="step-number">3</div><div class="step-body"><div class="step-icon">📏</div><div class="step-text" id="step3"></div></div></div>
+        <div class="step"><div class="step-number">4</div><div class="step-body"><div class="step-icon">✂️</div><div class="step-text" id="step4"></div></div></div>
+        <div class="step"><div class="step-number">5</div><div class="step-body"><div class="step-icon">✅</div><div class="step-text" id="step5"></div></div></div>
     </div>
 
     <!-- SOUTENIR -->
@@ -840,7 +851,7 @@
 
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══════════════════════════════════════
 // ÉTAT
 // ═══════════════════════════════════════
@@ -934,7 +945,7 @@ function fmtVal(mmVal) { const v=fromMM(mmVal); return currentUnit==='in' ? v.to
 const T = {
     fr: {
         titleParams:"Paramètres", titlePreview:"Aperçu de la forme finale",
-        titlePlan:"Gabarit de Traçage (à l'échelle)", titleSteps:"Mode Opératoire",
+        titlePlan:"Schéma de Traçage", titleSteps:"Mode Opératoire",
         labelDims:"Dimensions du bac principal",
         labelW:"Largeur (W)", labelH:"Hauteur (H)", labelAngle:"Angle sur-mesure (°)",
         labelSecondary:"Largeur bac secondaire — Té", labelObstacle:"Dimensions de l'obstacle",
@@ -949,17 +960,18 @@ const T = {
         selObs:["Obstacle Horizontal","Saut de Loup (Vertical)","Décalage Horizontal (2×45°)","Décalage Vertical (2×45°)"],
         selTe:["Té Horizontal"],
         svgWing1:"AILE 1", svgBase:"FOND", svgWing2:"AILE 2", svgOpen:"Ouverture",
-        step1:"<strong>Dépliez mentalement le bac :</strong> FOND au centre, AILE 1 en haut, AILE 2 en bas.",
-        step2:"<strong>Positionnez le gabarit</strong> sur le bac déplié et tracez les repères.",
-        step3:"<strong>Tracez la valeur V</strong> de chaque côté de l'axe de coupe.",
+        step1:"<strong>Renseignez les dimensions</strong> de votre chemin de câble en tôle perforée dans la section Paramètres.",
+        step2:"<strong>Tracez les dimensions</strong> indiquées sur votre chemin de câble en tôle perforée en <strong>hachurant les zones à enlever</strong>.",
+        step3:"<strong>Découpez puis ébavurez</strong> en suivant votre tracé.",
+        step4:"<strong>Pliez sur les axes :</strong> Rabattez les pattes vertes contre la pièce adjacente.",
+        step5:"<strong>Boulonnez :</strong> Boulons TRCC M6 dans les perforations des pattes de recouvrement.",
+        step6:"",
         step4_std:"<strong>Découpez les zones rouges</strong> à la cisaille ou meuleuse. <strong>Ne pas couper</strong> les zones <strong>vertes</strong> (pattes de recouvrement).",
         step4_vert:"<strong>Découpez les zones rouges</strong> sur les ailes uniquement, bord à bord. Le fond n'est pas coupé.",
-        step4_te:"<strong>BAC 1 :</strong> Découpez l'aile 1 dans la zone rouge. Le fond et l'aile 2 ne sont pas coupés.<br><strong>BAC 2 :</strong> Découpez les ailes en bout sur W1−10mm. Conservez les pattes vertes côté intérieur.",
-        step5:"<strong>Pliez sur les axes :</strong> Rabattez les pattes vertes contre la pièce adjacente.",
-        step6:"<strong>Boulonnez :</strong> Boulons TRCC M6 dans les perforations des pattes de recouvrement.",
+        step4_te:"<strong>Insérez le bac secondaire dans le bac principal</strong> en rabattant les pattes de recouvrement sur le bac principal.", step5_te:"<strong>Boulonnez :</strong> Boulons TRCC M6 dans les perforations des pattes de recouvrement et dans le fond entre le bac principal et secondaire.",
         errorW:"Largeur ≥ 50 mm requise.", errorH:"Hauteur ≥ 20 mm requise.",
         errorW2s:"Largeur bac secondaire ≥ 20 mm.", errorW2b:"Bac secondaire > bac principal.",
-        errorObs:"Déport obstacle > 0 requis.", errorAngle:"Angle entre 1° et 89°.",
+        errorObs:"Déport obstacle > 0 requis.", errorAngle:"Angle entre 1° et 120°.",
         supportTitle:"Soutenir le créateur",
         supportSub:"TrayForm Pro est gratuit et sans publicité.<br>Si l'app vous fait gagner du temps sur le chantier, un petit geste est toujours apprécié !",
         supportDonate:"Contribution", supportBmc:"Offrir un café", supportRate:"Noter l'app", footerRights:"Tous droits réservés",
@@ -972,7 +984,7 @@ const T = {
     },
     en: {
         titleParams:"Parameters", titlePreview:"Final Shape Preview",
-        titlePlan:"Cutting Template (to scale)", titleSteps:"Operating Procedure",
+        titlePlan:"Tracing Diagram", titleSteps:"Operating Procedure",
         labelDims:"Main tray dimensions",
         labelW:"Width (W)", labelH:"Height (H)", labelAngle:"Custom angle (°)",
         labelSecondary:"Secondary tray width — T-junction", labelObstacle:"Obstacle dimensions",
@@ -987,17 +999,18 @@ const T = {
         selObs:["Horizontal Obstacle","Wolf Jump (Vertical)","Horizontal Offset (2×45°)","Vertical Offset (2×45°)"],
         selTe:["Horizontal T"],
         svgWing1:"FLANGE 1", svgBase:"BASE", svgWing2:"FLANGE 2", svgOpen:"Opening",
-        step1:"<strong>Mentally unfold the tray:</strong> BASE in center, FLANGE 1 on top, FLANGE 2 on bottom.",
-        step2:"<strong>Position the template</strong> on the unfolded tray and mark the reference lines.",
-        step3:"<strong>Mark the V value</strong> on each side of the cut axis.",
+        step1:"<strong>Enter the dimensions</strong> of your perforated metal cable tray in the Parameters section.",
+        step2:"<strong>Draw the indicated dimensions</strong> on your cable tray, <strong>hatching the zones to remove</strong>.",
+        step3:"<strong>Cut then deburr</strong> following your markings.",
+        step4:"<strong>Fold on the axes:</strong> Bend the green tabs against the adjacent piece.",
+        step5:"<strong>Bolt it:</strong> TRCC M6 bolts through the overlap tab perforations.",
+        step6:"",
         step4_std:"<strong>Cut the red zones</strong> with shears or grinder. <strong>Do NOT cut</strong> the <strong>green</strong> zones (overlap tabs).",
         step4_vert:"<strong>Cut the red zones</strong> on flanges only, edge to edge. The base is not cut.",
-        step4_te:"<strong>TRAY 1:</strong> Cut flange 1 in the red zone. Base and flange 2 are untouched.<br><strong>TRAY 2:</strong> Cut both flanges at the end over W1−10mm. Keep green tabs on the inner side.",
-        step5:"<strong>Fold on the axes:</strong> Bend the green tabs against the adjacent piece.",
-        step6:"<strong>Bolt it:</strong> TRCC M6 bolts through the overlap tab perforations.",
+        step4_te:"<strong>Insert the secondary tray into the main tray</strong> by folding the overlap tabs onto the main tray.", step5_te:"<strong>Bolt it:</strong> TRCC M6 bolts through the overlap tab perforations and through the base between the main and secondary tray.",
         errorW:"Width ≥ 50 mm required.", errorH:"Height ≥ 20 mm required.",
         errorW2s:"Secondary tray width ≥ 20 mm.", errorW2b:"Secondary tray wider than main tray.",
-        errorObs:"Obstacle offset must be > 0.", errorAngle:"Angle must be between 1° and 89°.",
+        errorObs:"Obstacle offset must be > 0.", errorAngle:"Angle must be between 1° and 120°.",
         supportTitle:"Support the creator",
         supportSub:"TrayForm Pro is free and ad-free.<br>If the app saves you time on site, a small gesture is always appreciated!",
         supportDonate:"Contribution", supportBmc:"Buy a coffee", supportRate:"Rate the app", footerRights:"All rights reserved",
@@ -1010,7 +1023,7 @@ const T = {
     },
     es: {
         titleParams:"Parámetros", titlePreview:"Vista previa de la forma",
-        titlePlan:"Plantilla de Trazado (a escala)", titleSteps:"Procedimiento Operativo",
+        titlePlan:"Diagrama de Trazado", titleSteps:"Procedimiento Operativo",
         labelDims:"Dimensiones de la bandeja principal",
         labelW:"Ancho (W)", labelH:"Alto (H)", labelAngle:"Ángulo personalizado (°)",
         labelSecondary:"Ancho bandeja secundaria — T", labelObstacle:"Dimensiones del obstáculo",
@@ -1025,17 +1038,18 @@ const T = {
         selObs:["Obstáculo Horizontal","Salto de Lobo (Vertical)","Desviación Horizontal (2×45°)","Desviación Vertical (2×45°)"],
         selTe:["T Horizontal"],
         svgWing1:"ALA 1", svgBase:"FONDO", svgWing2:"ALA 2", svgOpen:"Apertura",
-        step1:"<strong>Despliega mentalmente la bandeja:</strong> FONDO al centro, ALA 1 arriba, ALA 2 abajo.",
-        step2:"<strong>Posiciona la plantilla</strong> sobre la bandeja desplegada y traza las referencias.",
-        step3:"<strong>Traza el valor V</strong> a cada lado del eje de corte.",
+        step1:"<strong>Introduce las dimensiones</strong> de tu bandeja de cable perforada en la sección Parámetros.",
+        step2:"<strong>Traza las dimensiones indicadas</strong> sobre tu bandeja, <strong>rayando las zonas a eliminar</strong>.",
+        step3:"<strong>Corta y desbarba</strong> siguiendo tu trazado.",
+        step4:"<strong>Plega sobre los ejes:</strong> Dobla las lengüetas verdes contra la pieza adyacente.",
+        step5:"<strong>Atornilla:</strong> Tornillos TRCC M6 en las perforaciones de las lengüetas.",
+        step6:"",
         step4_std:"<strong>Corta las zonas rojas</strong> con cizalla o amoladora. <strong>NO cortar</strong> las zonas <strong>verdes</strong> (lengüetas).",
         step4_vert:"<strong>Corta las zonas rojas</strong> en las alas únicamente, borde a borde. El fondo no se corta.",
-        step4_te:"<strong>BANDEJA 1:</strong> Corta el ala 1 en la zona roja. Fondo y ala 2 intactos.<br><strong>BANDEJA 2:</strong> Corta ambas alas en el extremo sobre W1−10mm. Conserva las lengüetas verdes al interior.",
-        step5:"<strong>Plega sobre los ejes:</strong> Dobla las lengüetas verdes contra la pieza adyacente.",
-        step6:"<strong>Atornilla:</strong> Tornillos TRCC M6 en las perforaciones de las lengüetas.",
+        step4_te:"<strong>Inserta la bandeja secundaria en la principal</strong> doblando las lengüetas sobre la bandeja principal.", step5_te:"<strong>Atornilla:</strong> Tornillos TRCC M6 en las perforaciones de las lengüetas y en el fondo entre la bandeja principal y secundaria.",
         errorW:"Ancho ≥ 50 mm.", errorH:"Alto ≥ 20 mm.",
         errorW2s:"Bandeja secundaria ≥ 20 mm.", errorW2b:"Secundaria > principal.",
-        errorObs:"Desviación > 0.", errorAngle:"Ángulo entre 1° y 89°.",
+        errorObs:"Desviación > 0.", errorAngle:"Ángulo entre 1° y 120°.",
         supportTitle:"Apoyar al creador",
         supportSub:"TrayForm Pro es gratuito y sin publicidad.<br>¡Un pequeño gesto siempre se agradece!",
         supportDonate:"Contribución", supportBmc:"Invitar un café", supportRate:"Calificar la app", footerRights:"Todos los derechos reservados",
@@ -1048,7 +1062,7 @@ const T = {
     },
     de: {
         titleParams:"Parameter", titlePreview:"Formvorschau",
-        titlePlan:"Zeichenschablone (maßstäblich)", titleSteps:"Arbeitsanleitung",
+        titlePlan:"Zeichenschema", titleSteps:"Arbeitsanleitung",
         labelDims:"Abmessungen der Haupttasse",
         labelW:"Breite (W)", labelH:"Höhe (H)", labelAngle:"Benutzerdefinierter Winkel (°)",
         labelSecondary:"Breite Nebentasse — T-Stück", labelObstacle:"Hindernisabmessungen",
@@ -1063,17 +1077,18 @@ const T = {
         selObs:["Horizontales Hindernis","Wolfsprung (Vertikal)","Horizontaler Versatz (2×45°)","Vertikaler Versatz (2×45°)"],
         selTe:["Horizontales T-Stück"],
         svgWing1:"FLANSCH 1", svgBase:"BODEN", svgWing2:"FLANSCH 2", svgOpen:"Öffnung",
-        step1:"<strong>Gedanklich abwickeln:</strong> BODEN Mitte, FLANSCH 1 oben, FLANSCH 2 unten.",
-        step2:"<strong>Schablone positionieren</strong> und Markierungen auf das Profil übertragen.",
-        step3:"<strong>V-Wert anzeichnen</strong> auf jeder Seite der Schnittachse.",
+        step1:"<strong>Abmessungen eingeben</strong> für Ihre Lochblech-Kabelrinne im Bereich Parameter.",
+        step2:"<strong>Abmessungen anzeichnen</strong> auf Ihrer Kabelrinne und <strong>zu entfernende Zonen schraffieren</strong>.",
+        step3:"<strong>Schneiden und entgraten</strong> entlang Ihrer Markierungen.",
+        step4:"<strong>Auf den Achsen biegen:</strong> Grüne Laschen gegen das Nachbarprofil klappen.",
+        step5:"<strong>Verschrauben:</strong> TRCC M6 Schrauben durch die Laschenperforierungen.",
+        step6:"",
         step4_std:"<strong>Rote Zonen schneiden</strong> mit Schere oder Winkelschleifer. <strong>Grüne</strong> Zonen NICHT schneiden (Überlappungslaschen).",
         step4_vert:"<strong>Rote Zonen schneiden</strong> nur an Flanschen, kantenbündig. Boden wird nicht geschnitten.",
-        step4_te:"<strong>PROFIL 1:</strong> Flansch 1 in der roten Zone schneiden. Boden und Flansch 2 bleiben. <br><strong>PROFIL 2:</strong> Beide Flansche am Ende auf W1−10mm schneiden. Grüne Laschen innen behalten.",
-        step5:"<strong>Auf den Achsen biegen:</strong> Grüne Laschen gegen das Nachbarprofil klappen.",
-        step6:"<strong>Verschrauben:</strong> TRCC M6 Schrauben durch die Laschenperforierungen.",
+        step4_te:"<strong>Nebenprofil in Hauptprofil einsetzen</strong> und Überlappungslaschen auf das Hauptprofil klappen.", step5_te:"<strong>Verschrauben:</strong> TRCC M6 Schrauben durch die Laschenperforierungen und durch den Boden zwischen Haupt- und Nebenprofil.",
         errorW:"Breite ≥ 50 mm.", errorH:"Höhe ≥ 20 mm.",
         errorW2s:"Nebenbreite ≥ 20 mm.", errorW2b:"Nebentasse > Haupttasse.",
-        errorObs:"Versatz > 0.", errorAngle:"Winkel 1°–89°.",
+        errorObs:"Versatz > 0.", errorAngle:"Winkel 1°–120°.",
         supportTitle:"Den Entwickler unterstützen",
         supportSub:"TrayForm Pro ist kostenlos und werbefrei.<br>Eine kleine Geste ist immer willkommen!",
         supportDonate:"Beitrag", supportBmc:"Kaffee spendieren", supportRate:"App bewerten", footerRights:"Alle Rechte vorbehalten",
@@ -1086,7 +1101,7 @@ const T = {
     },
     zh: {
         titleParams:"参数设置", titlePreview:"最终形状预览",
-        titlePlan:"切割模板（按比例）", titleSteps:"操作步骤",
+        titlePlan:"切割示意图", titleSteps:"操作步骤",
         labelDims:"主桥架尺寸",
         labelW:"宽度 (W)", labelH:"高度 (H)", labelAngle:"自定义角度（°）",
         labelSecondary:"副桥架宽度 — T形", labelObstacle:"障碍物尺寸",
@@ -1101,17 +1116,18 @@ const T = {
         selObs:["水平障碍","垂直绕障","水平偏移 (2×45°)","垂直偏移 (2×45°)"],
         selTe:["水平T形"],
         svgWing1:"侧翼1", svgBase:"底板", svgWing2:"侧翼2", svgOpen:"开口",
-        step1:"<strong>展开桥架：</strong>底板居中，侧翼1在上，侧翼2在下。",
-        step2:"<strong>放置模板</strong>在展开的桥架上，标记参考线。",
-        step3:"<strong>标记V值</strong>在切割轴线两侧。",
+        step1:"<strong>在参数区输入</strong>您的穿孔金属桥架尺寸。",
+        step2:"<strong>按图示尺寸在桥架上划线</strong>，<strong>标注需去除的区域</strong>。",
+        step3:"<strong>按划线切割并去毛刺。</strong>",
+        step4:"<strong>沿轴线折弯：</strong>将绿色搭接片折向相邻桥架。",
+        step5:"<strong>螺栓固定：</strong>TRCC M6螺栓穿过搭接片孔。",
+        step6:"",
         step4_std:"<strong>切割红色区域</strong>（剪刀或角磨机）。<strong>禁止切割绿色</strong>区域（搭接片）。",
         step4_vert:"<strong>仅切割侧翼红色区域</strong>，边对边。底板不切割。",
-        step4_te:"<strong>桥架1：</strong>切割侧翼1红色区域，底板和侧翼2不动。<br><strong>桥架2：</strong>两侧翼端部切割W1−10mm，保留内侧绿色搭接片。",
-        step5:"<strong>沿轴线折弯：</strong>将绿色搭接片折向相邻桥架。",
-        step6:"<strong>螺栓固定：</strong>TRCC M6螺栓穿过搭接片孔。",
+        step4_te:"<strong>将副桥架插入主桥架</strong>，将搭接片折叠到主桥架上。", step5_te:"<strong>螺栓固定：</strong>TRCC M6螺栓穿过搭接片孔及主副桥架之间的底板。",
         errorW:"宽度≥50mm。", errorH:"高度≥20mm。",
         errorW2s:"副桥架≥20mm。", errorW2b:"副桥架超出主桥架。",
-        errorObs:"偏移>0。", errorAngle:"角度1°~89°。",
+        errorObs:"偏移>0。", errorAngle:"角度1°~120°。",
         supportTitle:"支持创作者",
         supportSub:"TrayForm Pro 免费且无广告。<br>您的支持将不胜感激！",
         supportDonate:"贡献", supportBmc:"请我喝咖啡", supportRate:"评价应用", footerRights:"版权所有",
@@ -1124,7 +1140,7 @@ const T = {
     },
     ja: {
         titleParams:"パラメータ", titlePreview:"完成形プレビュー",
-        titlePlan:"切断テンプレート（縮尺）", titleSteps:"作業手順",
+        titlePlan:"切断図", titleSteps:"作業手順",
         labelDims:"メインラック寸法",
         labelW:"幅 (W)", labelH:"高さ (H)", labelAngle:"カスタム角度（°）",
         labelSecondary:"サブラック幅 — T字", labelObstacle:"障害物寸法",
@@ -1139,17 +1155,18 @@ const T = {
         selObs:["水平障害物","垂直迂回","水平オフセット (2×45°)","垂直オフセット (2×45°)"],
         selTe:["水平T字"],
         svgWing1:"フランジ1", svgBase:"底板", svgWing2:"フランジ2", svgOpen:"開口部",
-        step1:"<strong>ラックを展開：</strong>底板中央、フランジ1上、フランジ2下。",
-        step2:"<strong>テンプレートを配置</strong>し、基準線をラックに写し取る。",
-        step3:"<strong>切断軸の両側にV値をマーク。</strong>",
+        step1:"<strong>パラメータ欄に</strong>穿孔金属ケーブルトレイの寸法を入力する。",
+        step2:"<strong>指定寸法をトレイに描き</strong>、<strong>除去ゾーンをハッチング</strong>する。",
+        step3:"<strong>マーキングに沿って切断・バリ取り</strong>する。",
+        step4:"<strong>軸線で折り曲げ：</strong>緑タブを隣接ラックに折り返す。",
+        step5:"<strong>ボルト締め：</strong>TRCC M6ボルトをタブ穴に通す。",
+        step6:"",
         step4_std:"<strong>赤いゾーンを切断</strong>（シャーまたはグラインダー）。<strong>緑のゾーンは切断禁止</strong>（重ね代タブ）。",
         step4_vert:"<strong>フランジの赤いゾーンのみ切断、</strong>端から端まで。底板は切断しない。",
-        step4_te:"<strong>ラック1：</strong>フランジ1の赤いゾーンを切断。底板とフランジ2はそのまま。<br><strong>ラック2：</strong>両フランジをW1−10mmで端部切断。内側の緑タブを保持。",
-        step5:"<strong>軸線で折り曲げ：</strong>緑タブを隣接ラックに折り返す。",
-        step6:"<strong>ボルト締め：</strong>TRCC M6ボルトをタブ穴に通す。",
+        step4_te:"<strong>サブラックをメインラックに挿入し</strong>、重ねタブをメインラックに折り返す。", step5_te:"<strong>ボルト締め：</strong>TRCC M6ボルトをタブ穴およびメイン・サブラック間の底板に通す。",
         errorW:"幅≥50mm。", errorH:"高さ≥20mm。",
         errorW2s:"サブラック≥20mm。", errorW2b:"サブラックがメインを超過。",
-        errorObs:"オフセット>0。", errorAngle:"角度1°〜89°。",
+        errorObs:"オフセット>0。", errorAngle:"角度1°〜120°。",
         supportTitle:"クリエイターを応援",
         supportSub:"TrayForm Proは無料・広告なし。<br>応援よろしくお願いします！",
         supportDonate:"貢献", supportBmc:"コーヒーをおごる", supportRate:"アプリを評価", footerRights:"全著作権所有",
@@ -1189,7 +1206,7 @@ function setLang(lang) {
         'block-title-horiz':tr.blockHoriz,'block-title-vert':tr.blockVert,
         'block-title-obs':tr.blockObs,'block-title-te':tr.blockTe,
         'step1':tr.step1,'step2':tr.step2,'step3':tr.step3,
-        'step5':tr.step5,'step6':tr.step6,
+        'step4':tr.step4,'step5':tr.step5,
         'support-title':tr.supportTitle,'support-subtitle':tr.supportSub,
         'support-donate':tr.supportDonate,'support-bmc':tr.supportBmc,'support-rate':tr.supportRate,
         'footer-rights':tr.footerRights,
@@ -1233,7 +1250,7 @@ function validate(wMM,hMM,w2MM,obsDmm,figure,angle) {
     if (figure==='te-horizontal'&&(!w2MM||w2MM<20)) errs.push(tr.errorW2s);
     if (figure==='te-horizontal'&&w2MM>wMM)         errs.push(tr.errorW2b);
     if (figure.includes('obs')&&obsDmm<=0)          errs.push(tr.errorObs);
-    if (figure.includes('custom')&&(angle<1||angle>=90)) errs.push(tr.errorAngle);
+    if (figure.includes('custom')&&(angle<1||angle>120)) errs.push(tr.errorAngle);
     return errs;
 }
 
@@ -1246,6 +1263,8 @@ function updateApp() {
     const hRaw    = parseFloat(document.getElementById('height').value)||0;
     const w2Raw   = parseFloat(document.getElementById('width2').value)||0;
     const customA = parseFloat(document.getElementById('customAngle').value)||45;
+    // Clamp visuel : remet à 120 si l'utilisateur dépasse
+    if (customA > 120) { document.getElementById('customAngle').value = 120; }
     const obsDRaw = parseFloat(document.getElementById('obsD').value)||0;
     const obsLRaw = parseFloat(document.getElementById('obsL').value)||0;
     const distRaw = parseFloat(document.getElementById('distVal').value)||0;
@@ -1270,7 +1289,7 @@ function updateApp() {
 
     let angle=45;
     if (figure.includes('1x90'))   angle=90;
-    if (figure.includes('custom')) angle=Math.min(89,Math.max(1,customA));
+    if (figure.includes('custom')) angle=Math.min(120,Math.max(1,customA));
 
     const errEl=document.getElementById('error-msg');
     const errs=validate(w,h,w2,obsD,figure,angle);
@@ -1278,10 +1297,16 @@ function updateApp() {
     errEl.style.display='none';
 
     const tr=T[currentLang];
-    const step4=document.getElementById('step4');
-    if (figure.includes('montee')||figure.includes('descente')) step4.innerHTML=tr.step4_vert;
-    else if (figure==='te-horizontal') step4.innerHTML=tr.step4_te;
-    else step4.innerHTML=tr.step4_std;
+    // Étapes variables selon la figure
+    const step4el = document.getElementById('step4');
+    const step5el = document.getElementById('step5');
+    if (figure==='te-horizontal') {
+        step4el.innerHTML = tr.step4_te;
+        step5el.innerHTML = tr.step5_te;
+    } else {
+        step4el.innerHTML = tr.step4;
+        step5el.innerHTML = tr.step5;
+    }
 
     renderMiniature(figure,w,h,w2,obsD,obsL,angle,dist);
     renderPlan(figure,w,h,w2,obsD,obsL,angle,dist);
@@ -1416,8 +1441,34 @@ function renderPlan(figure,w,h,w2,obsD,obsL,angle,dist) {
     const BLUE='#0284c7', LBLUE='#38bdf8';
     const totalH=h+w+h, scale=220/totalH;
     const sH=h*scale, sW=w*scale;
-    const yAileExt=25, yFond=yAileExt+sH, yAileInt=yFond+sW, yEnd=yAileInt+sH;
+    const yAileExt=50, yFond=yAileExt+sH, yAileInt=yFond+sW, yEnd=yAileInt+sH;
     const biais45=obsD/Math.sin(Math.PI/4);
+
+    // ── File de labels anti-collision ──
+    const _labels = [];
+    function pushLabel(x, y, text, fill, size=13, anchor='middle', bold='700') {
+        _labels.push({x, y, text, fill, size, anchor, bold});
+    }
+    function renderLabels() {
+        // Tri par Y puis X
+        _labels.sort((a,b) => a.y!==b.y ? a.y-b.y : a.x-b.x);
+        const LINE_H = 16;
+        // Détection chevauchement horizontal : on décale vers le bas
+        for (let i=0; i<_labels.length; i++) {
+            for (let j=i+1; j<_labels.length; j++) {
+                const li=_labels[i], lj=_labels[j];
+                if (lj.y - li.y > LINE_H) break;
+                // Largeur estimée d'un label
+                const wI = li.text.length * li.size * 0.62;
+                const wJ = lj.text.length * lj.size * 0.62;
+                const overlap = (wI/2 + wJ/2) - Math.abs(lj.x - li.x);
+                if (overlap > 0) { lj.y += LINE_H; }
+            }
+        }
+        for (const l of _labels) {
+            svg+=`<text x="${l.x}" y="${l.y}" fill="${l.fill}" font-size="${l.size}" font-weight="${l.bold}" font-family="JetBrains Mono,monospace" text-anchor="${l.anchor}" paint-order="stroke" stroke="white" stroke-width="4">${l.text}</text>`;
+        }
+    }
     let L_TOTAL=900;
     if (figure==='obs-horiz'||figure==='obs-vert') L_TOTAL=Math.max(900,120+biais45*scale*2+obsL*scale+120);
     else if (figure==='horiz-2x45') { const d=dist>0?dist:w*1.5; L_TOTAL=Math.max(700,240+d*scale*2); }
@@ -1427,7 +1478,7 @@ function renderPlan(figure,w,h,w2,obsD,obsL,angle,dist) {
     const bgColor = darkMode ? '#0c1a2e' : '#f0f9ff';
     const bgBorder = darkMode ? '#1e3a5f' : '#bae6fd';
 
-    let svg=`<svg viewBox="0 0 ${L_TOTAL} ${yEnd+70}" xmlns="http://www.w3.org/2000/svg">
+    let svg=`<svg viewBox="0 0 ${L_TOTAL} ${yEnd+90}" xmlns="http://www.w3.org/2000/svg">
     <defs>
         <pattern id="cut" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
             <line x1="0" y1="0" x2="0" y2="8" stroke="#ef4444" stroke-width="3"/>
@@ -1447,32 +1498,83 @@ function renderPlan(figure,w,h,w2,obsD,obsL,angle,dist) {
 
     // Patte de recouvrement : min(V, 100mm)
 
-    function drawHorizCut(xPos,hingeSide,isLeftTab,localAngle) {
-        const coteX=w*Math.tan(localAngle/2*Math.PI/180),sX=coteX*scale;
+    function drawHorizCut(xPos,hingeSide,isLeftTab,localAngle,showFondTab=false) {
+        const tanHalf = Math.tan(localAngle/2*Math.PI/180);
+        const coteX=w*tanHalf,sX=coteX*scale;
         // Patte = min(coteX, 100mm) mais jamais > sX (zone de coupe dispo)
         const tabMM = Math.min(coteX, TAB_MAX_MM);
         const tabW  = tabMM * scale;
+        // Inclinaison de la ligne de pliage selon l'angle (0 pour 90°, positif au-delà)
+        const foldOffset = sW * Math.tan(Math.max(0, (localAngle - 90) * Math.PI / 180));
         if (hingeSide==='top') {
-            svg+=`<polygon points="${xPos},${yFond} ${xPos-sX},${yAileInt} ${xPos+sX},${yAileInt}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+            if (showFondTab) {
+                const fondTabSide = isLeftTab ? 'left' : 'right';
+                if (fondTabSide==='right') {
+                    // Ligne de pliage inclinée : apex (xPos,yFond) → (xPos+foldOffset, yAileInt)
+                    const fx = xPos + foldOffset;
+                    svg+=`<polygon points="${xPos},${yFond} ${xPos-sX},${yAileInt} ${fx},${yAileInt}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+                    svg+=`<polygon points="${xPos},${yFond} ${fx},${yAileInt} ${xPos+sX},${yAileInt}" fill="#10b981" stroke="#047857" stroke-width="2"/>`;
+                    pushLabel(xPos+sX/2, yFond+sW*0.65, `↔ ${fmtVal(coteX)}${ul}`, '#047857', 11);
+                } else {
+                    const fx = xPos - foldOffset;
+                    svg+=`<polygon points="${xPos},${yFond} ${xPos+sX},${yAileInt} ${fx},${yAileInt}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+                    svg+=`<polygon points="${xPos},${yFond} ${fx},${yAileInt} ${xPos-sX},${yAileInt}" fill="#10b981" stroke="#047857" stroke-width="2"/>`;
+                    pushLabel(xPos-sX/2, yFond+sW*0.65, `↔ ${fmtVal(coteX)}${ul}`, '#047857', 11);
+                }
+            } else {
+                svg+=`<polygon points="${xPos},${yFond} ${xPos-sX},${yAileInt} ${xPos+sX},${yAileInt}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+            }
             svg+=`<rect x="${xPos-sX}" y="${yAileInt}" width="${sX*2}" height="${sH}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
             const pX=isLeftTab ? xPos+sX-tabW : xPos-sX;
             svg+=`<rect x="${pX}" y="${yAileInt}" width="${tabW}" height="${sH}" fill="#10b981" stroke="#047857" stroke-width="2"/>`;
             svg+=`<line x1="${xPos}" y1="${yAileExt}" x2="${xPos}" y2="${yFond}" stroke="${LBLUE}" stroke-width="3" stroke-dasharray="10,5"/>`;
         } else {
-            svg+=`<polygon points="${xPos},${yAileInt} ${xPos-sX},${yFond} ${xPos+sX},${yFond}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+            if (showFondTab) {
+                const fondTabSide = isLeftTab ? 'left' : 'right';
+                if (fondTabSide==='right') {
+                    const fx = xPos + foldOffset;
+                    svg+=`<polygon points="${xPos},${yFond} ${xPos-sX},${yFond} ${fx},${yAileInt}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+                    svg+=`<polygon points="${xPos},${yFond} ${xPos+sX},${yFond} ${fx},${yAileInt}" fill="#10b981" stroke="#047857" stroke-width="2"/>`;
+                    pushLabel(xPos+sX/2, yFond+sW*0.35, `↔ ${fmtVal(coteX)}${ul}`, '#047857', 11);
+                } else {
+                    const fx = xPos - foldOffset;
+                    svg+=`<polygon points="${xPos},${yFond} ${xPos+sX},${yFond} ${fx},${yAileInt}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+                    svg+=`<polygon points="${xPos},${yFond} ${xPos-sX},${yFond} ${fx},${yAileInt}" fill="#10b981" stroke="#047857" stroke-width="2"/>`;
+                    pushLabel(xPos-sX/2, yFond+sW*0.35, `↔ ${fmtVal(coteX)}${ul}`, '#047857', 11);
+                }
+            } else {
+                svg+=`<polygon points="${xPos},${yAileInt} ${xPos-sX},${yFond} ${xPos+sX},${yFond}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
+            }
             svg+=`<rect x="${xPos-sX}" y="${yAileExt}" width="${sX*2}" height="${sH}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
             const pX=isLeftTab ? xPos+sX-tabW : xPos-sX;
             svg+=`<rect x="${pX}" y="${yAileExt}" width="${tabW}" height="${sH}" fill="#10b981" stroke="#047857" stroke-width="2"/>`;
             svg+=`<line x1="${xPos}" y1="${yAileInt}" x2="${xPos}" y2="${yEnd}" stroke="${LBLUE}" stroke-width="3" stroke-dasharray="10,5"/>`;
         }
-        svg+=`<text x="${xPos}" y="${yAileExt-10}" fill="${BLUE}" font-size="14" font-weight="900" font-family="JetBrains Mono,monospace" text-anchor="middle" paint-order="stroke" stroke="white" stroke-width="4">V = ${fmtVal(coteX*2)} ${ul}</text>`;
-        // Cote patte
+        // ── Cote V en dehors du chemin de câble ──
+        {
+            // Pour 'top' : annotation au-dessus de yAileExt
+            // Pour 'bottom' : annotation en dessous de yEnd
+            const yOff = 18; // distance hors du bac
+            const yLine = hingeSide==='top' ? yAileExt - yOff : yEnd + yOff;
+            const yLabel = hingeSide==='top' ? yAileExt - yOff - 4 : yEnd + yOff + 14;
+            const xL = xPos - sX;
+            const xR = xPos + sX;
+            // Traits de renvoi verticaux
+            const renvoi = hingeSide==='top' ? 6 : 6;
+            svg+=`<line x1="${xL}" y1="${yLine-renvoi}" x2="${xL}" y2="${yLine+renvoi}" stroke="${BLUE}" stroke-width="1.5"/>`;
+            svg+=`<line x1="${xR}" y1="${yLine-renvoi}" x2="${xR}" y2="${yLine+renvoi}" stroke="${BLUE}" stroke-width="1.5"/>`;
+            // Flèche horizontale double
+            svg+=`<line x1="${xL}" y1="${yLine}" x2="${xR}" y2="${yLine}" stroke="${BLUE}" stroke-width="1.5" marker-start="url(#arr-b)" marker-end="url(#arr-b)"/>`;
+            pushLabel((xL+xR)/2, yLabel, `V = ${fmtVal(coteX*2)} ${ul}`, BLUE, 12);
+        }
+        // Cote patte aile
         const pX2=isLeftTab?xPos+sX-tabW:xPos-sX;
-        svg+=`<text x="${pX2+tabW/2}" y="${hingeSide==='top'?yEnd+16:yAileExt-10}" fill="#047857" font-size="11" font-weight="700" font-family="JetBrains Mono,monospace" text-anchor="middle">↔ ${fmtVal(tabMM)}${ul}</text>`;
+        pushLabel(pX2+tabW/2, hingeSide==='top'?yEnd+18:yAileExt-28, `↔ ${fmtVal(tabMM)}${ul}`, '#047857', 11);
     }
 
     function drawVertCut(xPos,type,isLeftTab,localAngle) {
-        const coteX=h*Math.tan(localAngle/2*Math.PI/180),sX=coteX*scale;
+        const tanHalf = Math.tan(localAngle/2*Math.PI/180);
+        const coteX=h*tanHalf,sX=coteX*scale;
         const tabMM = Math.min(coteX, TAB_MAX_MM);
         const tabW  = tabMM * scale;
         if (type==='montee') {
@@ -1489,23 +1591,23 @@ function renderPlan(figure,w,h,w2,obsD,obsL,angle,dist) {
             svg+=`<rect x="${xPos-sX}" y="${yFond}" width="${sX*2}" height="${sW}" fill="url(#cut)" stroke="#ef4444" stroke-width="2"/>`;
             const pX=isLeftTab ? xPos+sX-tabW : xPos-sX;
             svg+=`<rect x="${pX}" y="${yFond}" width="${tabW}" height="${sW}" fill="#10b981" stroke="#047857" stroke-width="2"/>`;
-            svg+=`<text x="${pX+tabW/2}" y="${yFond+sW/2+5}" fill="#047857" font-size="11" font-weight="700" font-family="JetBrains Mono,monospace" text-anchor="middle">↔ ${fmtVal(tabMM)}${ul}</text>`;
+            pushLabel(pX+tabW/2, yFond+sW/2+5, `↔ ${fmtVal(tabMM)}${ul}`, '#047857', 11);
             svg+=`<circle cx="${xPos}" cy="${yAileExt}" r="5" fill="${LBLUE}"/>`;
             svg+=`<circle cx="${xPos}" cy="${yEnd}" r="5" fill="${LBLUE}"/>`;
         }
-        svg+=`<text x="${xPos}" y="${yAileExt-10}" fill="${BLUE}" font-size="14" font-weight="900" font-family="JetBrains Mono,monospace" text-anchor="middle" paint-order="stroke" stroke="white" stroke-width="4">V = ${fmtVal(coteX*2)} ${ul}</text>`;
+        pushLabel(xPos, yAileExt-10, `V = ${fmtVal(coteX*2)} ${ul}`, BLUE, 14);
     }
     function drawDimArrow(x1,x2,y,text) {
         svg+=`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${BLUE}" stroke-width="2.5" marker-start="url(#arr-b)" marker-end="url(#arr-b)"/>`;
         svg+=`<line x1="${x1}" y1="${y-8}" x2="${x1}" y2="${y+8}" stroke="${BLUE}" stroke-width="2"/>`;
         svg+=`<line x1="${x2}" y1="${y-8}" x2="${x2}" y2="${y+8}" stroke="${BLUE}" stroke-width="2"/>`;
-        svg+=`<text x="${(x1+x2)/2}" y="${y-10}" fill="${BLUE}" font-size="13" font-weight="700" font-family="JetBrains Mono,monospace" text-anchor="middle" paint-order="stroke" stroke="white" stroke-width="4">${text}</text>`;
+        pushLabel((x1+x2)/2, y-10, text, BLUE, 13);
     }
 
     const c=L_TOTAL/2;
-    if (figure==='horiz-1x90'||figure==='horiz-custom') { drawHorizCut(c,'top',false,angle); }
-    else if (figure==='horiz-2x45') { const d=dist>0?dist:w*1.5,sD=d*scale; drawHorizCut(c-sD/2,'top',true,45); drawHorizCut(c+sD/2,'top',false,45); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
-    else if (figure==='dec-horiz')  { const d=dist>0?dist:w*1.5,sD=d*scale; drawHorizCut(c-sD/2,'top',true,45); drawHorizCut(c+sD/2,'bottom',true,45); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
+    if (figure==='horiz-1x90'||figure==='horiz-custom') { drawHorizCut(c,'top',false,angle,true); }
+    else if (figure==='horiz-2x45') { const d=dist>0?dist:w*1.5,sD=d*scale; drawHorizCut(c-sD/2,'top',true,45,true); drawHorizCut(c+sD/2,'top',false,45,true); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
+    else if (figure==='dec-horiz')  { const d=dist>0?dist:w*1.5,sD=d*scale; drawHorizCut(c-sD/2,'top',true,45,true); drawHorizCut(c+sD/2,'bottom',true,45,true); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
     else if (figure==='te-horizontal') {
         const cutW = w2 * scale / 2;
         // FOND : juste le texte d'ouverture, pas de trait
@@ -1522,8 +1624,8 @@ function renderPlan(figure,w,h,w2,obsD,obsL,angle,dist) {
     else if (figure==='obs-horiz') {
         const b=obsD/Math.sin(Math.PI/4),sB=b*scale,sL=obsL*scale;
         const x1=c-sB-sL/2,x2=c-sL/2,x3=c+sL/2,x4=c+sB+sL/2;
-        drawHorizCut(x1,'top',true,45); drawHorizCut(x2,'bottom',false,45);
-        drawHorizCut(x3,'bottom',true,45); drawHorizCut(x4,'top',false,45);
+        drawHorizCut(x1,'top',true,45,true); drawHorizCut(x2,'bottom',false,45,true);
+        drawHorizCut(x3,'bottom',true,45,true); drawHorizCut(x4,'top',false,45,true);
         drawDimArrow(x1,x2,yEnd+40,`B=${fmtVal(b)}${ul}`); drawDimArrow(x2,x3,yEnd+40,`L=${fmtVal(obsL)}${ul}`); drawDimArrow(x3,x4,yEnd+40,`B=${fmtVal(b)}${ul}`);
     }
     else if (figure==='obs-vert') {
@@ -1533,6 +1635,7 @@ function renderPlan(figure,w,h,w2,obsD,obsL,angle,dist) {
         drawVertCut(x3,'descente',true,45); drawVertCut(x4,'montee',false,45);
         drawDimArrow(x1,x2,yEnd+45,`B=${fmtVal(b)}${ul}`); drawDimArrow(x2,x3,yEnd+45,`L=${fmtVal(obsL)}${ul}`); drawDimArrow(x3,x4,yEnd+45,`B=${fmtVal(b)}${ul}`);
     }
+    renderLabels();
     svg+=`</svg>`;
     document.getElementById('plan-svg').innerHTML=svg;
     } catch(e) { console.error('renderPlan error:', e); }
@@ -1645,8 +1748,6 @@ function renderPlan2(w, h, w2) {
 // ═══════════════════════════════════════
 document.querySelectorAll('input').forEach(el => el.addEventListener('input', updateApp));
 document.querySelectorAll('.figure-block select').forEach(el => el.addEventListener('change', updateApp));
-// Restaurez dark mode
-if (localStorage.getItem('tfp-dark')==='1') { darkMode=true; document.documentElement.setAttribute('data-theme','dark'); document.getElementById('dark-toggle').classList.add('on'); }
 setLang('fr');
 </script>
 </body>
