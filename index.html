@@ -570,6 +570,74 @@
         .overlay { display: none; position: fixed; inset: 0; z-index: 150; }
         .overlay.open { display: block; }
 
+        /* ══ TUTORIEL ══ */
+        #tuto-overlay {
+            display: none; position: fixed; inset: 0; z-index: 900;
+            pointer-events: none;
+        }
+        #tuto-overlay.active { display: block; }
+        #tuto-backdrop {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.55);
+            transition: clip-path 0.4s cubic-bezier(.4,0,.2,1);
+        }
+        #tuto-spotlight {
+            position: absolute;
+            border-radius: 12px;
+            box-shadow: 0 0 0 4px #38bdf8, 0 0 0 6px rgba(56,189,248,0.3);
+            transition: all 0.4s cubic-bezier(.4,0,.2,1);
+            pointer-events: none;
+        }
+        #tuto-bubble {
+            position: absolute;
+            background: white;
+            border-radius: 16px;
+            padding: 18px 20px 16px;
+            max-width: 300px; min-width: 240px;
+            box-shadow: 0 8px 32px rgba(3,105,161,0.25);
+            transition: all 0.4s cubic-bezier(.4,0,.2,1);
+            pointer-events: all;
+            z-index: 901;
+        }
+        .dark #tuto-bubble { background: #1e293b; }
+        #tuto-bubble::before {
+            content: ''; position: absolute;
+            width: 12px; height: 12px;
+            background: white; transform: rotate(45deg);
+            transition: all 0.3s;
+        }
+        .dark #tuto-bubble::before { background: #1e293b; }
+        .tuto-arrow-top::before    { bottom: -6px; left: 24px; }
+        .tuto-arrow-bottom::before { top: -6px; left: 24px; }
+        .tuto-arrow-left::before   { right: -6px; top: 20px; }
+        .tuto-arrow-right::before  { left: -6px; top: 20px; }
+        #tuto-step-icon { font-size: 28px; margin-bottom: 6px; }
+        #tuto-step-num  { font-size: 11px; font-weight: 700; color: #0284c7; margin-bottom: 4px; letter-spacing: 0.05em; }
+        #tuto-step-title { font-size: 15px; font-weight: 800; color: #0369a1; margin-bottom: 6px; }
+        .dark #tuto-step-title { color: #38bdf8; }
+        #tuto-step-text { font-size: 13px; line-height: 1.55; color: #475569; margin-bottom: 14px; }
+        .dark #tuto-step-text { color: #94a3b8; }
+        #tuto-controls { display: flex; align-items: center; gap: 8px; }
+        #tuto-progress { display: flex; gap: 4px; flex: 1; }
+        .tuto-dot { width: 6px; height: 6px; border-radius: 50%; background: #cbd5e1; transition: background 0.2s; }
+        .tuto-dot.active { background: #0284c7; width: 18px; border-radius: 3px; }
+        #tuto-skip { font-size: 11px; color: #94a3b8; background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
+        #tuto-skip:hover { color: #0284c7; background: #f0f9ff; }
+        #tuto-prev { font-size: 12px; background: #f1f5f9; color: #475569; border: none; border-radius: 8px; padding: 7px 12px; cursor: pointer; font-weight: 600; }
+        #tuto-prev:hover { background: #e2e8f0; }
+        #tuto-next { font-size: 13px; background: linear-gradient(135deg, #0284c7, #0369a1); color: white; border: none; border-radius: 8px; padding: 7px 16px; cursor: pointer; font-weight: 700; flex: 1; }
+        #tuto-next:hover { opacity: 0.9; }
+
+
+        /* RTL (Arabe) */
+        [dir="rtl"] .topbar { flex-direction: row-reverse; }
+        [dir="rtl"] .input-row { flex-direction: row-reverse; }
+        [dir="rtl"] .step-body { text-align: right; }
+        [dir="rtl"] .card-title { flex-direction: row-reverse; }
+        [dir="rtl"] .step { flex-direction: row-reverse; }
+        [dir="rtl"] .dropdown { left: auto; right: 10px; }
+        [dir="rtl"] .lang-option { flex-direction: row-reverse; }
+
         @media print {
             .topbar, .btn-print, #controls-panel, #preview-container,
             #steps-container, .support-card, .footer,
@@ -579,9 +647,61 @@
             #plan-svg svg { min-width: unset; width: 100%; }
             .svg-scroll { overflow: visible; }
         }
+        /* ══ PAYWALL ══ */
+        #paywall {
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            background: linear-gradient(135deg, #0c1a2e 0%, #0369a1 100%);
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 32px 24px; text-align: center;
+        }
+        #paywall.show { display: flex; }
+        .paywall-logo { font-size: 48px; margin-bottom: 12px; }
+        .paywall-brand { font-size: 28px; font-weight: 900; color: white; margin-bottom: 4px; }
+        .paywall-brand span { color: #38bdf8; }
+        .paywall-sub { font-size: 13px; color: #7dd3fc; margin-bottom: 32px; letter-spacing: 0.05em; }
+        .paywall-card {
+            background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.15);
+            border-radius: 20px; padding: 28px 24px; max-width: 340px; width: 100%;
+            margin-bottom: 24px;
+        }
+        .paywall-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 10px; }
+        .paywall-text { font-size: 13px; color: #bae6fd; line-height: 1.6; margin-bottom: 20px; }
+        .paywall-features { text-align: left; margin-bottom: 20px; }
+        .paywall-feature { font-size: 13px; color: #e0f2fe; margin-bottom: 8px; display: flex; gap: 8px; }
+        .paywall-btn {
+            display: block; width: 100%;
+            background: linear-gradient(135deg, #38bdf8, #0284c7);
+            color: white; font-size: 15px; font-weight: 800;
+            border: none; border-radius: 14px; padding: 16px;
+            cursor: pointer; text-decoration: none;
+            box-shadow: 0 4px 20px rgba(56,189,248,0.4);
+        }
+        .paywall-btn:hover { opacity: 0.9; }
+        .paywall-note { font-size: 11px; color: #7dd3fc; margin-top: 12px; }
     </style>
 </head>
 <body>
+
+<!-- ══ PAYWALL (navigateur uniquement) ══ -->
+<div id="paywall">
+    <div class="paywall-logo">🔧</div>
+    <div class="paywall-brand">TrayForm <span>Pro</span></div>
+    <div class="paywall-sub">by Nexel</div>
+    <div class="paywall-card">
+        <div class="paywall-title" id="pw-title">Application disponible sur Google Play</div>
+        <div class="paywall-text" id="pw-text">TrayForm Pro est une application Android. Téléchargez-la depuis le Google Play Store pour l'utiliser sur votre appareil.</div>
+        <div class="paywall-features">
+            <div class="paywall-feature">✅ <span id="pw-f1">Gabarits de découpe précis à l'échelle</span></div>
+            <div class="paywall-feature">✅ <span id="pw-f2">8 types d'angles et configurations</span></div>
+            <div class="paywall-feature">✅ <span id="pw-f3">7 langues disponibles</span></div>
+            <div class="paywall-feature">✅ <span id="pw-f4">Fonctionne hors connexion</span></div>
+        </div>
+        <a class="paywall-btn" id="pw-btn" href="https://play.google.com/store/apps/details?id=com.nexel.trayformpro" target="_blank">
+            <span id="pw-btn-text">📥 Télécharger sur Google Play</span>
+        </a>
+        <div class="paywall-note" id="pw-note">Disponible sur Android</div>
+    </div>
+</div>
 
 <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
@@ -590,14 +710,26 @@
     <div class="modal">
         <div class="modal-title" id="contact-title">Nous contacter</div>
         <div class="modal-sub" id="contact-sub">Une question, un bug ou une suggestion ? On vous répond rapidement.</div>
-        <a class="modal-contact-item" href="/cdn-cgi/l/email-protection#543a312c31383530393d3a143339353d387a373b39">
-            <div class="modal-contact-icon">✉️</div>
-            <div>
-                <div class="modal-contact-text"><span class="__cf_email__" data-cfemail="19777c617c75787d747077597e74787075377a7674">[email&#160;protected]</span></div>
-                <div class="modal-contact-desc" id="contact-email-desc">Support & questions générales</div>
-            </div>
-        </a>
+        <a class="modal-contact-item" href="mailto:nexeladmin@gmail.com"><div class="modal-contact-icon">✉️</div><div><div class="modal-contact-text">nexeladmin@gmail.com</div><div class="modal-contact-desc" id="contact-email-desc">Support &amp; questions générales</div></div></a>
         <button class="modal-close" id="contact-close" onclick="closeContact()">Fermer</button>
+    </div>
+</div>
+
+<!-- ══ TUTORIEL ══ -->
+<div id="tuto-overlay">
+    <div id="tuto-backdrop"></div>
+    <div id="tuto-spotlight"></div>
+    <div id="tuto-bubble">
+        <div id="tuto-step-icon">👋</div>
+        <div id="tuto-step-num">ÉTAPE 1 / 6</div>
+        <div id="tuto-step-title">Bienvenue !</div>
+        <div id="tuto-step-text">Découvrez TrayForm Pro en 30 secondes.</div>
+        <div id="tuto-controls">
+            <div id="tuto-progress"></div>
+            <button id="tuto-skip" onclick="tutoEnd()">Passer</button>
+            <button id="tuto-prev" onclick="tutoPrev()" style="display:none">←</button>
+            <button id="tuto-next" onclick="tutoNext()">Suivant →</button>
+        </div>
     </div>
 </div>
 
@@ -647,6 +779,7 @@
         <div class="lang-option" id="opt-de" onclick="setLang('de')"><span class="flag">🇩🇪</span> Deutsch <span class="check" id="chk-de" style="display:none">✓</span></div>
         <div class="lang-option" id="opt-zh" onclick="setLang('zh')"><span class="flag">🇨🇳</span> 中文 <span class="check" id="chk-zh" style="display:none">✓</span></div>
         <div class="lang-option" id="opt-ja" onclick="setLang('ja')"><span class="flag">🇯🇵</span> 日本語 <span class="check" id="chk-ja" style="display:none">✓</span></div>
+        <div class="lang-option" id="opt-ar" onclick="setLang('ar')"><span class="flag">🇸🇦</span> العربية <span class="check" id="chk-ar" style="display:none">✓</span></div>
     </div>
     <!-- Dark mode -->
     <div class="dropdown-section">
@@ -659,6 +792,12 @@
     <div class="dropdown-section">
         <div class="menu-link" onclick="openContact()">
             ✉️ &nbsp;<span id="dd-contact-label">Nous contacter</span>
+        </div>
+    </div>
+    <!-- Tutoriel -->
+    <div class="dropdown-section">
+        <div class="menu-link" onclick="closeMenu(); tutoReset()">
+            🎓 &nbsp;<span id="dd-tuto-label">Revoir le tutoriel</span>
         </div>
     </div>
 </div>
@@ -825,19 +964,7 @@
     <div class="support-card">
         <div class="support-icon">❤️</div>
         <div class="support-title" id="support-title">Soutenir le créateur</div>
-        <div class="support-subtitle" id="support-subtitle">
-            TrayForm Pro est gratuit et sans publicité.<br>
-            Si l'app vous fait gagner du temps sur le chantier, un petit geste est toujours apprécié !
-        </div>
         <div class="support-buttons">
-            <a class="support-btn support-btn-primary" href="https://paypal.me/Nexelapp" target="_blank" rel="noopener">
-                💳 <span id="support-donate">Contribution</span>
-            </a>
-            <a class="support-btn support-btn-bmc" href="https://buymeacoffee.com/Nexel" target="_blank" rel="noopener">
-                ☕ <span id="support-bmc">Café</span>
-            </a>
-        </div>
-        <div class="support-buttons" style="margin-top:8px;">
             <a class="support-btn support-btn-secondary" href="https://play.google.com/store/apps/details?id=com.nexel.trayformpro" target="_blank" rel="noopener">
                 ⭐ <span id="support-rate">Noter l'app</span>
             </a>
@@ -851,10 +978,44 @@
 
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ═══════════════════════════════════════
-// ÉTAT
+// PAYWALL — Bloquer accès navigateur
 // ═══════════════════════════════════════
+const PAYWALL_TRANS = {
+    fr: { title:'Application disponible sur Google Play', text:'TrayForm Pro est une application Android. Téléchargez-la depuis le Google Play Store pour l\'utiliser sur votre appareil.', f1:'Gabarits de découpe précis à l\'échelle', f2:'8 types d\'angles et configurations', f3:'7 langues disponibles', f4:'Fonctionne hors connexion', btn:'📥 Télécharger sur Google Play', note:'Disponible sur Android' },
+    en: { title:'Available on Google Play', text:'TrayForm Pro is an Android app. Download it from the Google Play Store to use it on your device.', f1:'Precise scale cutting templates', f2:'8 angle types and configurations', f3:'7 languages available', f4:'Works offline', btn:'📥 Get it on Google Play', note:'Available on Android' },
+    es: { title:'Disponible en Google Play', text:'TrayForm Pro es una app Android. Descárgala desde Google Play Store para usarla en tu dispositivo.', f1:'Plantillas de corte precisas a escala', f2:'8 tipos de ángulos y configuraciones', f3:'7 idiomas disponibles', f4:'Funciona sin conexión', btn:'📥 Descargar en Google Play', note:'Disponible en Android' },
+    de: { title:'Verfügbar im Google Play Store', text:'TrayForm Pro ist eine Android-App. Laden Sie sie aus dem Google Play Store herunter.', f1:'Präzise maßstabsgetreue Schnittschablonen', f2:'8 Winkeltypen und Konfigurationen', f3:'7 Sprachen verfügbar', f4:'Funktioniert offline', btn:'📥 Im Google Play herunterladen', note:'Für Android' },
+    zh: { title:'在 Google Play 上下载', text:'TrayForm Pro 是一款 Android 应用。请从 Google Play 商店下载到您的设备。', f1:'精确比例切割模板', f2:'8种角度类型和配置', f3:'支持7种语言', f4:'支持离线使用', btn:'📥 在 Google Play 下载', note:'适用于 Android' },
+    ja: { title:'Google Play で入手', text:'TrayForm Pro は Android アプリです。Google Play ストアからダウンロードしてください。', f1:'正確なスケールの切断テンプレート', f2:'8種類の角度タイプと設定', f3:'7言語対応', f4:'オフラインで使用可能', btn:'📥 Google Play でダウンロード', note:'Android 対応' },
+    ar: { title:'متوفر على Google Play', text:'TrayForm Pro تطبيق أندرويد. قم بتنزيله من متجر Google Play لاستخدامه على جهازك.', f1:'قوالب قطع دقيقة على النطاق الصحيح', f2:'8 أنواع زوايا وتكوينات', f3:'7 لغات متاحة', f4:'يعمل بدون إنترنت', btn:'📥 تنزيل من Google Play', note:'متوفر على أندرويد' },
+};
+
+function checkPaywall() {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+        || window.matchMedia('(display-mode: fullscreen)').matches
+        || window.navigator.standalone === true
+        || document.referrer.includes('android-app://');
+    if (!isStandalone) {
+        // Détecter langue navigateur
+        const browserLang = (navigator.language || 'fr').slice(0,2);
+        const lang = PAYWALL_TRANS[browserLang] ? browserLang : 'fr';
+        const t = PAYWALL_TRANS[lang];
+        document.getElementById('pw-title').textContent = t.title;
+        document.getElementById('pw-text').textContent = t.text;
+        document.getElementById('pw-f1').textContent = t.f1;
+        document.getElementById('pw-f2').textContent = t.f2;
+        document.getElementById('pw-f3').textContent = t.f3;
+        document.getElementById('pw-f4').textContent = t.f4;
+        document.getElementById('pw-btn-text').textContent = t.btn;
+        document.getElementById('pw-note').textContent = t.note;
+        document.getElementById('paywall').classList.add('show');
+    }
+}
+checkPaywall();
+
+
 let currentLang  = 'fr';
 let currentUnit  = 'mm';
 let activeBlock  = 'horiz';
@@ -952,7 +1113,7 @@ const T = {
         labelD:"Déport (D)", labelL:"Longueur (L)", labelDist:"Distance entre coupes", labelObsCustom:"Obstacle après l'angle (optionnel)", labelObsCustomNote:"Profondeur obstacle (D)", dimPosCut:"Position de coupe (V)", dimDispo:"Longueur disponible", dimObsTooClose:"⚠️ Obstacle trop proche",
         legendCut:"Zone à découper", legendTab:"Patte de recouvrement (NE PAS couper)", legendFold:"Axe de pliage",
         btnPrint:"Imprimer le gabarit", ddLangLabel:"Langue",
-        ddDarkLabel:"Mode sombre", ddContactLabel:"Nous contacter",
+        ddDarkLabel:"Mode sombre", ddContactLabel:"Nous contacter", ddTutoLabel:"Revoir le tutoriel",
         blockHoriz:"Angle Horizontal", blockVert:"Angle Vertical",
         blockObs:"Contournement", blockTe:"Dérivation en Té",
         selHoriz:["90° Simple","90° Large (2×45°)","Sur-Mesure"],
@@ -991,7 +1152,7 @@ const T = {
         labelD:"Offset (D)", labelL:"Length (L)", labelDist:"Distance between cuts", labelObsCustom:"Obstacle after angle (optional)", labelObsCustomNote:"Obstacle depth (D)", dimPosCut:"Cut position (V)", dimDispo:"Available length", dimObsTooClose:"⚠️ Obstacle too close",
         legendCut:"Cut zone", legendTab:"Overlap tab (DO NOT cut)", legendFold:"Fold axis",
         btnPrint:"Print template", ddLangLabel:"Language",
-        ddDarkLabel:"Dark mode", ddContactLabel:"Contact us",
+        ddDarkLabel:"Dark mode", ddContactLabel:"Contact us", ddTutoLabel:"Replay tutorial",
         blockHoriz:"Horizontal Bend", blockVert:"Vertical Bend",
         blockObs:"Bypass", blockTe:"T-Junction",
         selHoriz:["Simple 90°","Wide 90° (2×45°)","Custom"],
@@ -1108,7 +1269,7 @@ const T = {
         labelD:"偏移量 (D)", labelL:"长度 (L)", labelDist:"切割间距", labelObsCustom:"转角后障碍物（可选）", labelObsCustomNote:"障碍物深度 (D)", dimPosCut:"切割位置 (V)", dimDispo:"可用长度", dimObsTooClose:"⚠️ 障碍物太近",
         legendCut:"切割区域", legendTab:"搭接片（勿切）", legendFold:"折弯轴",
         btnPrint:"打印模板", ddLangLabel:"语言",
-        ddDarkLabel:"深色模式", ddContactLabel:"联系我们",
+        ddDarkLabel:"深色模式", ddContactLabel:"联系我们", ddTutoLabel:"重播教程",
         blockHoriz:"水平弯头", blockVert:"垂直弯头",
         blockObs:"绕障", blockTe:"T形分支",
         selHoriz:["简单90°","宽90°(2×45°)","自定义"],
@@ -1147,7 +1308,7 @@ const T = {
         labelD:"オフセット (D)", labelL:"長さ (L)", labelDist:"切断間距離", labelObsCustom:"角度後の障害物（任意）", labelObsCustomNote:"障害物の深さ (D)", dimPosCut:"切断位置 (V)", dimDispo:"利用可能な長さ", dimObsTooClose:"⚠️ 障害物が近すぎます",
         legendCut:"切断ゾーン", legendTab:"重ねタブ（切断禁止）", legendFold:"折り曲げ軸",
         btnPrint:"テンプレート印刷", ddLangLabel:"言語",
-        ddDarkLabel:"ダークモード", ddContactLabel:"お問い合わせ",
+        ddDarkLabel:"ダークモード", ddContactLabel:"お問い合わせ", ddTutoLabel:"チュートリアルを再生",
         blockHoriz:"水平曲げ", blockVert:"垂直曲げ",
         blockObs:"迂回", blockTe:"T字分岐",
         selHoriz:["単純90°","広幅90°(2×45°)","カスタム"],
@@ -1176,6 +1337,48 @@ const T = {
         titleDims:"折り曲げ後の仕上がり寸法",
         dimLenFinie:"仕上がり長さ", dimLargeur:"幅", dimHauteur:"高さ", dimNote:"重ね代タブ除く",
         contactEmailDesc:"サポート・一般的なご質問", contactBmcDesc:"メッセージ・ご提案", contactClose:"閉じる"
+    },
+    ar: {
+        titleParams:"المعاملات", titlePreview:"معاينة",
+        titlePlan:"مخطط التحديد", titleSteps:"طريقة التنفيذ",
+        labelDims:"أبعاد القناة الرئيسية",
+        labelW:"العرض (W)", labelH:"الارتفاع (H)", labelAngle:"زاوية مخصصة (°)",
+        labelSecondary:"عرض القناة الثانوية — T", labelObstacle:"أبعاد العائق",
+        labelD:"الإزاحة (D)", labelL:"الطول (L)", labelDist:"المسافة بين القطعتين",
+        labelObsCustom:"عائق بعد الزاوية (اختياري)", labelObsCustomNote:"عمق العائق (D)",
+        dimPosCut:"موضع القطع (V)", dimDispo:"الطول المتاح", dimObsTooClose:"⚠️ العائق قريب جداً",
+        legendCut:"منطقة القطع", legendTab:"لسان التغطية (لا تقطع)", legendFold:"محور الثني",
+        btnPrint:"طباعة المخطط", ddLangLabel:"اللغة",
+        ddDarkLabel:"الوضع المظلم", ddContactLabel:"اتصل بنا", ddTutoLabel:"إعادة البرنامج التعليمي",
+        blockHoriz:"زاوية أفقية", blockVert:"زاوية عمودية",
+        blockObs:"تجاوز العائق", blockTe:"تفرع T",
+        selHoriz:["90° بسيط","90° موسع (2×45°)","مخصص"],
+        selVert:["صعود 90°","صعود 2×45°","صعود مخصص","نزول 90°","نزول 2×45°","نزول مخصص"],
+        selObs:["عائق أفقي","قفز عمودي","إزاحة أفقية (2×45°)","إزاحة عمودية (2×45°)"],
+        selTe:["T أفقي"],
+        svgWing1:"جناح 1", svgBase:"القاع", svgWing2:"جناح 2", svgOpen:"فتحة",
+        step1:"<strong>أدخل أبعاد</strong> قناة الكابل المثقبة في قسم المعاملات.",
+        step2:"<strong>ارسم الأبعاد المحددة</strong> على القناة و<strong>هاشر المناطق المراد إزالتها</strong>.",
+        step3:"<strong>اقطع ثم أزل الحواد الحادة</strong> باتباع رسمك.",
+        step4:"<strong>اثنِ على المحاور:</strong> أطوِ ألسنة التغطية الخضراء على القطعة المجاورة.",
+        step5:"<strong>ربط البراغي:</strong> براغي TRCC M6 في ثقوب ألسنة التغطية.",
+        step6:"",
+        step4_te:"<strong>أدخل القناة الثانوية في القناة الرئيسية</strong> مع طي ألسنة التغطية على القناة الرئيسية.",
+        step5_te:"<strong>ربط البراغي:</strong> براغي TRCC M6 في ثقوب الألسنة وفي القاع بين القناتين الرئيسية والثانوية.",
+        step4_std:"<strong>اقطع المناطق الحمراء</strong> بالمقص أو الجلاخة. <strong>لا تقطع</strong> المناطق <strong>الخضراء</strong> (ألسنة التغطية).",
+        step4_vert:"<strong>اقطع المناطق الحمراء</strong> على الأجنحة فقط، من حافة لحافة. القاع لا يُقطع.",
+        errorW:"العرض ≥ 50 ملم.", errorH:"الارتفاع ≥ 20 ملم.",
+        errorW2s:"عرض القناة الثانوية ≥ 20 ملم.", errorW2b:"القناة الثانوية أكبر من الرئيسية.",
+        errorObs:"الإزاحة > 0.", errorAngle:"الزاوية بين 1° و 120°.",
+        supportTitle:"دعم المطور",
+        supportSub:"TrayForm Pro مجاني وبدون إعلانات.<br>إذا وفّر لك الوقت في العمل، فكل مساهمة موضع تقدير!",
+        supportDonate:"مساهمة", supportBmc:"اشترِ قهوة", supportRate:"قيّم التطبيق", footerRights:"جميع الحقوق محفوظة",
+        contactTitle:"اتصل بنا", contactSub:"سؤال أو خطأ أو اقتراح؟ نرد بسرعة.",
+        epiTitle:"معدات الحماية الشخصية الإلزامية قبل أي قطع",
+        epiGloves:"قفازات مضادة للقطع", epiGlasses:"نظارات واقية", epiHearing:"حماية السمع",
+        titleDims:"الأبعاد بعد الثني",
+        dimLenFinie:"الطول النهائي", dimLargeur:"العرض", dimHauteur:"الارتفاع", dimNote:"بدون ألسنة",
+        contactEmailDesc:"الدعم والأسئلة العامة", contactBmcDesc:"رسائل واقتراحات", contactClose:"إغلاق"
     }
 };
 
@@ -1185,7 +1388,9 @@ const T = {
 function setLang(lang) {
     currentLang = lang;
     document.documentElement.lang = lang;
-    ['fr','en','es','de','zh','ja'].forEach(l => {
+    // RTL pour l'arabe
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    ['fr','en','es','de','zh','ja','ar'].forEach(l => {
         document.getElementById('opt-'+l).classList.toggle('active', l===lang);
         document.getElementById('chk-'+l).style.display = l===lang ? '' : 'none';
     });
@@ -1201,14 +1406,15 @@ function setLang(lang) {
         'label-dist':tr.labelDist,
         'label-obs-custom':tr.labelObsCustom,'label-obs-custom-note':tr.labelObsCustomNote,
         'legend-cut':tr.legendCut,'legend-tab':tr.legendTab,'legend-fold':tr.legendFold,
-        'label-print':tr.btnPrint,'dd-lang-label':tr.ddLangLabel,
+        'dd-lang-label':tr.ddLangLabel,
         'dd-dark-label':tr.ddDarkLabel,'dd-contact-label':tr.ddContactLabel,
+        'dd-tuto-label':tr.ddTutoLabel,
         'block-title-horiz':tr.blockHoriz,'block-title-vert':tr.blockVert,
         'block-title-obs':tr.blockObs,'block-title-te':tr.blockTe,
         'step1':tr.step1,'step2':tr.step2,'step3':tr.step3,
         'step4':tr.step4,'step5':tr.step5,
-        'support-title':tr.supportTitle,'support-subtitle':tr.supportSub,
-        'support-donate':tr.supportDonate,'support-bmc':tr.supportBmc,'support-rate':tr.supportRate,
+        'support-title':tr.supportTitle,
+        'support-rate':tr.supportRate,
         'footer-rights':tr.footerRights,
         'contact-title':tr.contactTitle,'contact-sub':tr.contactSub,
         'contact-email-desc':tr.contactEmailDesc,
@@ -1269,7 +1475,8 @@ function updateApp() {
     const obsLRaw = parseFloat(document.getElementById('obsL').value)||0;
     const distRaw = parseFloat(document.getElementById('distVal').value)||0;
     const obsCustomDRaw = parseFloat(document.getElementById('obsCustomD').value)||0;
-    const w=toMM(wRaw), h=toMM(hRaw), w2=toMM(w2Raw), obsD=toMM(obsDRaw), obsL=toMM(obsLRaw), dist=toMM(distRaw), obsCustomD=toMM(obsCustomDRaw);
+    const w=toMM(wRaw), h=toMM(hRaw), w2=toMM(w2Raw), obsD=toMM(obsDRaw), obsL=toMM(obsLRaw), obsCustomD=toMM(obsCustomDRaw);
+    let dist=toMM(distRaw);
 
     document.getElementById('secondaryGroup').style.display = figure==='te-horizontal' ? 'block':'none';
     document.getElementById('obstacleGroup').style.display  = (figure==='obs-horiz'||figure==='obs-vert') ? 'block':'none';
@@ -1283,8 +1490,15 @@ function updateApp() {
         const minRef = (figure==='montee-2x45'||figure==='descente-2x45'||figure==='dec-vert') ? h : w;
         const distIn = document.getElementById('distVal');
         distIn.min = fromMM(minRef);
-        if (parseFloat(distIn.value) < fromMM(minRef)) distIn.value = Math.ceil(fromMM(minRef));
+        // On n'écrase la valeur que si le champ n'est pas en cours d'édition
+        if (document.activeElement !== distIn) {
+            if (!distIn.value || parseFloat(distIn.value) < fromMM(minRef)) {
+                distIn.value = Math.ceil(fromMM(minRef));
+            }
+        }
         document.getElementById('label-dist-note').textContent = 'min. ' + fmtVal(minRef) + unitLabel();
+        // Clamp pour le rendu : on n'affiche jamais en dessous du minimum
+        if (dist < minRef) dist = minRef;
     }
 
     let angle=45;
@@ -1744,11 +1958,198 @@ function renderPlan2(w, h, w2) {
 }
 
 // ═══════════════════════════════════════
-// INIT
+// TUTORIEL
 // ═══════════════════════════════════════
+const TUTO_STEPS = [
+    { targetId: null,              icon:'👋', titleKey:'tutoT0', textKey:'tutoD0', arrow:'bottom' },
+    { targetId: 'controls-panel',  icon:'⚙️', titleKey:'tutoT1', textKey:'tutoD1', arrow:'top' },
+    { targetId: 'preview-container',icon:'👁️',titleKey:'tutoT2', textKey:'tutoD2', arrow:'top' },
+    { targetId: 'plan-container',  icon:'📐', titleKey:'tutoT3', textKey:'tutoD3', arrow:'top' },
+    { targetId: 'dims-container',  icon:'📏', titleKey:'tutoT4', textKey:'tutoD4', arrow:'top' },
+    { targetId: 'steps-container', icon:'🛠️', titleKey:'tutoT5', textKey:'tutoD5', arrow:'top' },
+];
+const TUTO_TRANS = {
+    fr: {
+        tutoT0:'Bienvenue sur TrayForm Pro !',      tutoD0:'Cette app calcule et trace vos gabarits de découpe pour chemins de câble en tôle perforée. Laissez-moi vous guider !',
+        tutoT1:'Paramètres',                         tutoD1:'Choisissez votre type d\'angle (horizontal, vertical, obstacle, Té) puis saisissez les dimensions de votre bac.',
+        tutoT2:'Aperçu',                             tutoD2:'Visualisez en temps réel la forme finale de votre chemin de câble une fois assemblé.',
+        tutoT3:'Schéma de traçage',                  tutoD3:'Le gabarit à reporter directement sur votre bac. Les zones rouges sont à couper, les vertes à conserver.',
+        tutoT4:'Encombrement après pliage',          tutoD4:'La dimension finale de votre pièce une fois pliée et assemblée — utile pour vérifier l\'encombrement.',
+        tutoT5:'Mode opératoire',                    tutoD5:'Suivez les 5 étapes pour réaliser votre découpe proprement et en toute sécurité. C\'est parti !',
+        tutoSkip:'Passer', tutoPrev:'←', tutoNext:'Suivant →', tutoFinish:'C\'est parti ! 🚀',
+    },
+    en: {
+        tutoT0:'Welcome to TrayForm Pro!',           tutoD0:'This app calculates and draws cutting templates for perforated cable trays. Let me guide you!',
+        tutoT1:'Parameters',                          tutoD1:'Choose your angle type (horizontal, vertical, obstacle, T-junction) then enter your tray dimensions.',
+        tutoT2:'Preview',                             tutoD2:'See the final shape of your cable tray in real time once assembled.',
+        tutoT3:'Tracing diagram',                     tutoD3:'The template to mark directly on your tray. Red zones are to cut, green zones to keep.',
+        tutoT4:'Dimensions after bending',            tutoD4:'The final size of your piece once folded and assembled — useful for checking clearance.',
+        tutoT5:'Operating procedure',                 tutoD5:'Follow the 5 steps to cut cleanly and safely. Let\'s go!',
+        tutoSkip:'Skip', tutoPrev:'←', tutoNext:'Next →', tutoFinish:'Let\'s go! 🚀',
+    },
+    es: {
+        tutoT0:'¡Bienvenido a TrayForm Pro!',        tutoD0:'Esta app calcula y traza plantillas de corte para bandejas de cable perforadas. ¡Déjame guiarte!',
+        tutoT1:'Parámetros',                          tutoD1:'Elige el tipo de ángulo (horizontal, vertical, obstáculo, T) e introduce las dimensiones de tu bandeja.',
+        tutoT2:'Vista previa',                        tutoD2:'Visualiza en tiempo real la forma final de tu bandeja una vez ensamblada.',
+        tutoT3:'Diagrama de trazado',                 tutoD3:'La plantilla a marcar directamente en tu bandeja. Las zonas rojas se cortan, las verdes se conservan.',
+        tutoT4:'Dimensiones tras el doblado',         tutoD4:'La dimensión final de tu pieza una vez doblada y ensamblada.',
+        tutoT5:'Procedimiento',                       tutoD5:'Sigue los 5 pasos para cortar de forma limpia y segura. ¡Vamos!',
+        tutoSkip:'Omitir', tutoPrev:'←', tutoNext:'Siguiente →', tutoFinish:'¡Vamos! 🚀',
+    },
+    de: {
+        tutoT0:'Willkommen bei TrayForm Pro!',       tutoD0:'Diese App berechnet und zeichnet Schnittschablonen für perforierte Kabelrinnen. Lassen Sie sich führen!',
+        tutoT1:'Parameter',                           tutoD1:'Wählen Sie den Winkeltyp (horizontal, vertikal, Hindernis, T-Stück) und geben Sie die Maße ein.',
+        tutoT2:'Vorschau',                            tutoD2:'Sehen Sie die endgültige Form Ihrer Kabelrinne in Echtzeit.',
+        tutoT3:'Zeichenschema',                       tutoD3:'Die Schablone zum direkten Übertragen auf Ihr Profil. Rote Zonen schneiden, grüne behalten.',
+        tutoT4:'Abmessungen nach dem Biegen',         tutoD4:'Die Endgröße Ihres Teils nach dem Biegen und Montieren.',
+        tutoT5:'Arbeitsanleitung',                    tutoD5:'Folgen Sie den 5 Schritten für sauberes und sicheres Schneiden. Los geht\'s!',
+        tutoSkip:'Überspringen', tutoPrev:'←', tutoNext:'Weiter →', tutoFinish:'Los geht\'s! 🚀',
+    },
+    zh: {
+        tutoT0:'欢迎使用 TrayForm Pro！',             tutoD0:'本应用为穿孔金属桥架计算并绘制切割模板。让我来引导您！',
+        tutoT1:'参数',                                 tutoD1:'选择角度类型（水平、垂直、绕障、T形），然后输入桥架尺寸。',
+        tutoT2:'预览',                                 tutoD2:'实时查看桥架组装后的最终形状。',
+        tutoT3:'切割示意图',                           tutoD3:'直接标记在桥架上的模板。红色区域需切割，绿色区域保留。',
+        tutoT4:'折弯后尺寸',                           tutoD4:'折弯组装后的最终尺寸，便于检查空间占用。',
+        tutoT5:'操作步骤',                             tutoD5:'按照5个步骤安全规范地完成切割。开始吧！',
+        tutoSkip:'跳过', tutoPrev:'←', tutoNext:'下一步 →', tutoFinish:'出发！🚀',
+    },
+    ja: {
+        tutoT0:'TrayForm Pro へようこそ！',           tutoD0:'このアプリは穿孔ケーブルトレイの切断テンプレートを計算・作図します。ご案内します！',
+        tutoT1:'パラメータ',                           tutoD1:'角度タイプ（水平・垂直・障害物・T字）を選び、トレイの寸法を入力してください。',
+        tutoT2:'プレビュー',                           tutoD2:'組み立て後のトレイの最終形状をリアルタイムで確認できます。',
+        tutoT3:'切断図',                               tutoD3:'トレイに直接転写するテンプレートです。赤い部分を切断し、緑の部分を残します。',
+        tutoT4:'折り曲げ後の寸法',                     tutoD4:'折り曲げ・組み立て後の最終寸法を確認できます。',
+        tutoT5:'作業手順',                             tutoD5:'5つのステップに従って安全・丁寧に切断を行いましょう！',
+        tutoSkip:'スキップ', tutoPrev:'←', tutoNext:'次へ →', tutoFinish:'スタート！🚀',
+    },
+    ar: {
+        tutoT0:'مرحباً بك في TrayForm Pro!',         tutoD0:'هذا التطبيق يحسب ويرسم قوالب القطع لقنوات الكابل المثقبة. دعني أرشدك!',
+        tutoT1:'المعاملات',                            tutoD1:'اختر نوع الزاوية (أفقي، عمودي، عائق، T) ثم أدخل أبعاد القناة.',
+        tutoT2:'معاينة',                               tutoD2:'شاهد الشكل النهائي لقناتك في الوقت الفعلي.',
+        tutoT3:'مخطط التحديد',                        tutoD3:'القالب لنقله مباشرة على قناتك. المناطق الحمراء تُقطع والخضراء تُحفظ.',
+        tutoT4:'الأبعاد بعد الثني',                   tutoD4:'الحجم النهائي لقطعتك بعد الثني والتجميع.',
+        tutoT5:'طريقة التنفيذ',                       tutoD5:'اتبع الخطوات الـ5 لقطع نظيف وآمن. هيا بنا!',
+        tutoSkip:'تخطي', tutoPrev:'←', tutoNext:'التالي →', tutoFinish:'هيا! 🚀',
+    },
+};
+
+let tutoStep = 0;
+function tutoStart() {
+    if (localStorage.getItem('trayformpro_tuto_done')) return;
+    tutoStep = 0;
+    document.getElementById('tuto-overlay').classList.add('active');
+    tutoRender();
+}
+function tutoEnd() {
+    document.getElementById('tuto-overlay').classList.remove('active');
+    localStorage.setItem('trayformpro_tuto_done', '1');
+}
+function tutoNext() {
+    if (tutoStep < TUTO_STEPS.length - 1) { tutoStep++; tutoRender(); }
+    else tutoEnd();
+}
+function tutoPrev() {
+    if (tutoStep > 0) { tutoStep--; tutoRender(); }
+}
+function tutoRender() {
+    const tr = TUTO_TRANS[currentLang] || TUTO_TRANS.fr;
+    const step = TUTO_STEPS[tutoStep];
+    const total = TUTO_STEPS.length;
+    // Contenu
+    document.getElementById('tuto-step-icon').textContent = step.icon;
+    document.getElementById('tuto-step-num').textContent = (currentLang==='ar'?`${total} / ${tutoStep+1}`:`${tutoStep+1} / ${total}`);
+    document.getElementById('tuto-step-title').textContent = tr[step.titleKey];
+    document.getElementById('tuto-step-text').textContent = tr[step.textKey];
+    document.getElementById('tuto-skip').textContent = tr.tutoSkip;
+    document.getElementById('tuto-prev').textContent = tr.tutoPrev;
+    const isLast = tutoStep === total - 1;
+    document.getElementById('tuto-next').textContent = isLast ? tr.tutoFinish : tr.tutoNext;
+    document.getElementById('tuto-prev').style.display = tutoStep > 0 ? '' : 'none';
+    // Progression
+    const prog = document.getElementById('tuto-progress');
+    prog.innerHTML = '';
+    for (let i=0; i<total; i++) {
+        const d = document.createElement('div');
+        d.className = 'tuto-dot' + (i===tutoStep?' active':'');
+        prog.appendChild(d);
+    }
+    // Spotlight
+    const spot = document.getElementById('tuto-spotlight');
+    const bubble = document.getElementById('tuto-bubble');
+    const back = document.getElementById('tuto-backdrop');
+    const pad = 8;
+    if (!step.targetId) {
+        // Écran de bienvenue — centré, pas de spotlight
+        spot.style.cssText = 'display:none';
+        back.style.background = 'rgba(0,0,0,0.65)';
+        bubble.style.cssText = `
+            top:50%; left:50%; transform:translate(-50%,-50%);
+            position:fixed;
+        `;
+        bubble.className = '';
+    } else {
+        const el = document.getElementById(step.targetId);
+        if (!el) return;
+        el.scrollIntoView({behavior:'smooth', block:'center'});
+        setTimeout(() => {
+            const r = el.getBoundingClientRect();
+            const vw = window.innerWidth, vh = window.innerHeight;
+            const sx = r.left - pad, sy = r.top - pad;
+            const sw = r.width + pad*2, sh = r.height + pad*2;
+            spot.style.cssText = `display:block;left:${sx}px;top:${sy}px;width:${sw}px;height:${sh}px;`;
+            back.style.background = 'rgba(0,0,0,0)';
+            back.style.cssText = `
+                position:absolute;inset:0;
+                background: radial-gradient(ellipse at ${sx+sw/2}px ${sy+sh/2}px,
+                    transparent ${Math.max(sw,sh)*0.45}px,
+                    rgba(0,0,0,0.6) ${Math.max(sw,sh)*0.55}px);
+            `;
+            // Position bulle
+            let bTop, bLeft;
+            const bW = 300, bH = 180;
+            if (sy > bH + 60) {
+                // Au-dessus de l'élément
+                bTop = sy - bH - 20;
+                bLeft = Math.min(Math.max(sx, 10), vw - bW - 10);
+                bubble.className = 'tuto-arrow-top';
+            } else {
+                // En dessous
+                bTop = sy + sh + 16;
+                bLeft = Math.min(Math.max(sx, 10), vw - bW - 10);
+                bubble.className = 'tuto-arrow-bottom';
+            }
+            bubble.style.cssText = `position:fixed;top:${bTop}px;left:${bLeft}px;transform:none;`;
+        }, 300);
+    }
+}
+function tutoReset() {
+    localStorage.removeItem('trayformpro_tuto_done');
+    tutoStep = 0;
+    document.getElementById('tuto-overlay').classList.add('active');
+    tutoRender();
+}
+
+
 document.querySelectorAll('input').forEach(el => el.addEventListener('input', updateApp));
 document.querySelectorAll('.figure-block select').forEach(el => el.addEventListener('change', updateApp));
+// Correction de distVal au blur (quand l'utilisateur quitte le champ)
+document.getElementById('distVal').addEventListener('blur', () => {
+    const figure = getActiveFigure();
+    const needDist = figure==='horiz-2x45'||figure==='montee-2x45'||figure==='descente-2x45'||figure==='dec-horiz'||figure==='dec-vert';
+    if (!needDist) return;
+    const wRaw = parseFloat(document.getElementById('width').value)||0;
+    const hRaw = parseFloat(document.getElementById('height').value)||0;
+    const w = toMM(wRaw), h = toMM(hRaw);
+    const minRef = (figure==='montee-2x45'||figure==='descente-2x45'||figure==='dec-vert') ? h : w;
+    const distIn = document.getElementById('distVal');
+    if (!distIn.value || parseFloat(distIn.value) < fromMM(minRef)) {
+        distIn.value = Math.ceil(fromMM(minRef));
+        updateApp();
+    }
+});
 setLang('fr');
+setTimeout(tutoStart, 600);
 </script>
 </body>
 </html>
