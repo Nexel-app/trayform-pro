@@ -1463,7 +1463,7 @@ function validate(wMM,hMM,w2MM,obsDmm,figure,angle) {
     if (figure==='te-horizontal'&&(!w2MM||w2MM<20)) errs.push(tr.errorW2s);
     if (figure==='te-horizontal'&&w2MM>wMM)         errs.push(tr.errorW2b);
     if (figure.includes('obs')&&obsDmm<=0)          errs.push(tr.errorObs);
-    if (figure.includes('custom')&&(angle<1||angle>120)) errs.push(tr.errorAngle);
+    if ((figure.includes('custom')||figure==='horiz-curve')&&(angle<1||angle>120)) errs.push(tr.errorAngle);
     return errs;
 }
 
@@ -1519,7 +1519,7 @@ function updateApp() {
 
     let angle=45;
     if (figure.includes('1x90'))   angle=90;
-    if (figure.includes('custom')) angle=Math.min(120,Math.max(1,customA));
+    if (figure.includes('custom')||figure==='horiz-curve') angle=Math.min(120,Math.max(1,customA));
 
     const errEl=document.getElementById('error-msg');
     const errs=validate(w,h,w2,obsD,figure,angle);
@@ -1870,26 +1870,40 @@ function renderPlan(figure,w,h,w2,obsD,obsL,angle,dist,radius=300,nSegments=1) {
     const c=L_TOTAL/2;
     if (figure==='horiz-1x90'||figure==='horiz-custom') { drawHorizCut(c,'top',false,angle,true); }
     else if (figure==='horiz-curve') {
-        // Courbe = n segments de V réguliers espacés selon l'arc
-        const segAngle = angle / nSegments;
+        // Courbe = tronçons droits — coupes PLEINE LARGEUR (aile1 + fond + aile2)
         const arcLen = radius * (angle * Math.PI / 180);
         const segSpacing = (arcLen / nSegments) * scale;
         const totalWidth = segSpacing * nSegments;
         const xStart = c - totalWidth/2;
-        for (let i=0; i<nSegments; i++) {
-            const xPos = xStart + segSpacing*i + segSpacing/2;
-            // Côté de la patte alternée pour lisibilité
-            const isLeft = (i % 2 === 0);
-            drawHorizCut(xPos, 'top', isLeft, segAngle, true);
+
+        // Zones hachurées rouges sur toute la hauteur pour chaque tronçon
+        for (let i = 0; i < nSegments; i++) {
+            const x1 = xStart + segSpacing * i;
+            const mid = x1 + segSpacing/2;
+            svg+=`<rect x="${x1}" y="${yAileExt}" width="${segSpacing}" height="${sH}" fill="url(#cut)" stroke="none" opacity="0.55"/>`;
+            svg+=`<rect x="${x1}" y="${yFond}"    width="${segSpacing}" height="${sW}" fill="url(#cut)" stroke="none" opacity="0.3"/>`;
+            svg+=`<rect x="${x1}" y="${yAileInt}" width="${segSpacing}" height="${sH}" fill="url(#cut)" stroke="none" opacity="0.55"/>`;
+            pushLabel(mid, yFond+sW/2+5, `${i+1}`, BLUE, 10);
         }
-        // Cote espacement entre segments
-        if (nSegments > 1) {
-            const x0 = xStart + segSpacing/2;
-            const x1 = xStart + segSpacing*3/2;
-            drawDimArrow(x0, x1, yEnd+60, `e = ${fmtVal(arcLen/nSegments)} ${ul}`);
+
+        // Lignes de coupe rouges pleine hauteur (n+1 lignes)
+        for (let i = 0; i <= nSegments; i++) {
+            const xPos = xStart + segSpacing * i;
+            svg+=`<line x1="${xPos}" y1="${yAileExt}" x2="${xPos}" y2="${yEnd}" stroke="#ef4444" stroke-width="2.5"/>`;
         }
-        // Cote développé total
-        drawDimArrow(xStart + segSpacing/2, xStart + segSpacing*nSegments - segSpacing/2, yEnd+80, `Arc = ${fmtVal(arcLen)} ${ul}`);
+
+        // Pointillés bleus sur les séparations aile/fond (axes de pliage)
+        svg+=`<line x1="${xStart}" y1="${yFond}"    x2="${xStart+totalWidth}" y2="${yFond}"    stroke="${LBLUE}" stroke-width="1.5" stroke-dasharray="6,4"/>`;
+        svg+=`<line x1="${xStart}" y1="${yAileInt}" x2="${xStart+totalWidth}" y2="${yAileInt}" stroke="${LBLUE}" stroke-width="1.5" stroke-dasharray="6,4"/>`;
+
+        // Cotes
+        drawDimArrow(xStart, xStart+segSpacing, yEnd+42, `e = ${fmtVal(arcLen/nSegments)} ${ul}`);
+        drawDimArrow(xStart, xStart+totalWidth,  yEnd+62, `Arc = ${fmtVal(arcLen)} ${ul}`);
+
+        // Labels
+        pushLabel(xStart-8, yAileExt+sH/2+5, tr.svgWing1, darkMode?'#7dd3fc':BLUE, 12, 'end');
+        pushLabel(xStart-8, yFond+sW/2+5,    tr.svgBase,  darkMode?'#7dd3fc':BLUE, 12, 'end');
+        pushLabel(xStart-8, yAileInt+sH/2+5, tr.svgWing2, darkMode?'#7dd3fc':BLUE, 12, 'end');
     }
     else if (figure==='horiz-2x45') { const d=dist>0?dist:w*1.5,sD=d*scale; drawHorizCut(c-sD/2,'top',true,45,true); drawHorizCut(c+sD/2,'top',false,45,true); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
     else if (figure==='dec-horiz')  { const d=dist>0?dist:w*1.5,sD=d*scale; drawHorizCut(c-sD/2,'top',true,45,true); drawHorizCut(c+sD/2,'bottom',true,45,true); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
