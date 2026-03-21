@@ -820,6 +820,7 @@
                     <option value="horiz-1x90">90° Simple</option>
                     <option value="horiz-2x45">90° Large (2×45°)</option>
                     <option value="horiz-custom">Sur-Mesure</option>
+                    <option value="horiz-curve">Courbe (rayon)</option>
                 </select>
             </div>
             <!-- Angle Vertical -->
@@ -874,6 +875,11 @@
         <div class="group" id="angleGroup">
             <label id="label-angle">Angle sur-mesure (°)</label>
             <input type="number" id="customAngle" value="45" min="1" max="120">
+        </div>
+        <div class="group" id="radiusGroup">
+            <label id="label-radius">Rayon de courbure (R)</label>
+            <input type="number" id="radiusVal" value="300" min="50">
+            <div class="input-label" id="label-radius-note">Segments : —</div>
         </div>
         <div class="group" id="secondaryGroup">
             <label id="label-secondary">Largeur bac secondaire — Té</label>
@@ -1108,7 +1114,7 @@ const T = {
         titleParams:"Paramètres", titlePreview:"Aperçu de la forme finale",
         titlePlan:"Schéma de Traçage", titleSteps:"Mode Opératoire",
         labelDims:"Dimensions du bac principal",
-        labelW:"Largeur (W)", labelH:"Hauteur (H)", labelAngle:"Angle sur-mesure (°)",
+        labelW:"Largeur (W)", labelH:"Hauteur (H)", labelAngle:"Angle sur-mesure (°)", labelRadius:"Rayon de courbure (R)", labelRadiusNote:"Segments",
         labelSecondary:"Largeur bac secondaire — Té", labelObstacle:"Dimensions de l'obstacle",
         labelD:"Déport (D)", labelL:"Longueur (L)", labelDist:"Distance entre coupes", labelObsCustom:"Obstacle après l'angle (optionnel)", labelObsCustomNote:"Profondeur obstacle (D)", dimPosCut:"Position de coupe (V)", dimDispo:"Longueur disponible", dimObsTooClose:"⚠️ Obstacle trop proche",
         legendCut:"Zone à découper", legendTab:"Patte de recouvrement (NE PAS couper)", legendFold:"Axe de pliage",
@@ -1116,7 +1122,7 @@ const T = {
         ddDarkLabel:"Mode sombre", ddContactLabel:"Nous contacter", ddTutoLabel:"Revoir le tutoriel",
         blockHoriz:"Angle Horizontal", blockVert:"Angle Vertical",
         blockObs:"Contournement", blockTe:"Dérivation en Té",
-        selHoriz:["90° Simple","90° Large (2×45°)","Sur-Mesure"],
+        selHoriz:["90° Simple","90° Large (2×45°)","Sur-Mesure","Courbe (rayon)"],
         selVert:["Montée 90°","Montée 2×45°","Montée Sur-Mesure","Descente 90°","Descente 2×45°","Descente Sur-Mesure"],
         selObs:["Obstacle Horizontal","Saut de Loup (Vertical)","Décalage Horizontal (2×45°)","Décalage Vertical (2×45°)"],
         selTe:["Té Horizontal"],
@@ -1147,7 +1153,7 @@ const T = {
         titleParams:"Parameters", titlePreview:"Final Shape Preview",
         titlePlan:"Tracing Diagram", titleSteps:"Operating Procedure",
         labelDims:"Main tray dimensions",
-        labelW:"Width (W)", labelH:"Height (H)", labelAngle:"Custom angle (°)",
+        labelW:"Width (W)", labelH:"Height (H)", labelAngle:"Custom angle (°)", labelRadius:"Bend radius (R)", labelRadiusNote:"Segments",
         labelSecondary:"Secondary tray width — T-junction", labelObstacle:"Obstacle dimensions",
         labelD:"Offset (D)", labelL:"Length (L)", labelDist:"Distance between cuts", labelObsCustom:"Obstacle after angle (optional)", labelObsCustomNote:"Obstacle depth (D)", dimPosCut:"Cut position (V)", dimDispo:"Available length", dimObsTooClose:"⚠️ Obstacle too close",
         legendCut:"Cut zone", legendTab:"Overlap tab (DO NOT cut)", legendFold:"Fold axis",
@@ -1155,7 +1161,7 @@ const T = {
         ddDarkLabel:"Dark mode", ddContactLabel:"Contact us", ddTutoLabel:"Replay tutorial",
         blockHoriz:"Horizontal Bend", blockVert:"Vertical Bend",
         blockObs:"Bypass", blockTe:"T-Junction",
-        selHoriz:["Simple 90°","Wide 90° (2×45°)","Custom"],
+        selHoriz:["Simple 90°","Wide 90° (2×45°)","Custom","Curve (radius)"],
         selVert:["Rise 90°","Rise 2×45°","Custom Rise","Drop 90°","Drop 2×45°","Custom Drop"],
         selObs:["Horizontal Obstacle","Wolf Jump (Vertical)","Horizontal Offset (2×45°)","Vertical Offset (2×45°)"],
         selTe:["Horizontal T"],
@@ -1186,7 +1192,7 @@ const T = {
         titleParams:"Parámetros", titlePreview:"Vista previa de la forma",
         titlePlan:"Diagrama de Trazado", titleSteps:"Procedimiento Operativo",
         labelDims:"Dimensiones de la bandeja principal",
-        labelW:"Ancho (W)", labelH:"Alto (H)", labelAngle:"Ángulo personalizado (°)",
+        labelW:"Ancho (W)", labelH:"Alto (H)", labelAngle:"Ángulo personalizado (°)", labelRadius:"Radio de curvatura (R)", labelRadiusNote:"Segmentos",
         labelSecondary:"Ancho bandeja secundaria — T", labelObstacle:"Dimensiones del obstáculo",
         labelD:"Desviación (D)", labelL:"Longitud (L)", labelDist:"Distancia entre cortes", labelObsCustom:"Obstáculo tras el ángulo (opc.)", labelObsCustomNote:"Profundidad obstáculo (D)", dimPosCut:"Posición de corte (V)", dimDispo:"Longitud disponible", dimObsTooClose:"⚠️ Obstáculo demasiado cerca",
         legendCut:"Zona a cortar", legendTab:"Lengüeta (NO cortar)", legendFold:"Eje de plegado",
@@ -1194,7 +1200,7 @@ const T = {
         ddDarkLabel:"Modo oscuro", ddContactLabel:"Contáctenos",
         blockHoriz:"Ángulo Horizontal", blockVert:"Ángulo Vertical",
         blockObs:"Desvío", blockTe:"Derivación en T",
-        selHoriz:["90° Simple","90° Amplio (2×45°)","Personalizado"],
+        selHoriz:["90° Simple","90° Amplio (2×45°)","Personalizado","Curva (radio)"],
         selVert:["Subida 90°","Subida 2×45°","Subida Personalizada","Bajada 90°","Bajada 2×45°","Bajada Personalizada"],
         selObs:["Obstáculo Horizontal","Salto de Lobo (Vertical)","Desviación Horizontal (2×45°)","Desviación Vertical (2×45°)"],
         selTe:["T Horizontal"],
@@ -1225,7 +1231,7 @@ const T = {
         titleParams:"Parameter", titlePreview:"Formvorschau",
         titlePlan:"Zeichenschema", titleSteps:"Arbeitsanleitung",
         labelDims:"Abmessungen der Haupttasse",
-        labelW:"Breite (W)", labelH:"Höhe (H)", labelAngle:"Benutzerdefinierter Winkel (°)",
+        labelW:"Breite (W)", labelH:"Höhe (H)", labelAngle:"Benutzerdefinierter Winkel (°)", labelRadius:"Biegeradius (R)", labelRadiusNote:"Segmente",
         labelSecondary:"Breite Nebentasse — T-Stück", labelObstacle:"Hindernisabmessungen",
         labelD:"Versatz (D)", labelL:"Länge (L)", labelDist:"Abstand zwischen Schnitten", labelObsCustom:"Hindernis nach Winkel (opt.)", labelObsCustomNote:"Hindernistiefe (D)", dimPosCut:"Schnittposition (V)", dimDispo:"Verfügbare Länge", dimObsTooClose:"⚠️ Hindernis zu nah",
         legendCut:"Schnittzone", legendTab:"Überlappungslasche (NICHT schneiden)", legendFold:"Biegeachse",
@@ -1233,7 +1239,7 @@ const T = {
         ddDarkLabel:"Dunkelmodus", ddContactLabel:"Kontaktieren Sie uns",
         blockHoriz:"Horizontale Biegung", blockVert:"Vertikale Biegung",
         blockObs:"Umgehung", blockTe:"T-Abzweigung",
-        selHoriz:["Einfach 90°","Breit 90° (2×45°)","Benutzerdefiniert"],
+        selHoriz:["Einfach 90°","Breit 90° (2×45°)","Benutzerdefiniert","Kurve (Radius)"],
         selVert:["Aufstieg 90°","Aufstieg 2×45°","Aufstieg Custom","Abstieg 90°","Abstieg 2×45°","Abstieg Custom"],
         selObs:["Horizontales Hindernis","Wolfsprung (Vertikal)","Horizontaler Versatz (2×45°)","Vertikaler Versatz (2×45°)"],
         selTe:["Horizontales T-Stück"],
@@ -1264,7 +1270,7 @@ const T = {
         titleParams:"参数设置", titlePreview:"最终形状预览",
         titlePlan:"切割示意图", titleSteps:"操作步骤",
         labelDims:"主桥架尺寸",
-        labelW:"宽度 (W)", labelH:"高度 (H)", labelAngle:"自定义角度（°）",
+        labelW:"宽度 (W)", labelH:"高度 (H)", labelAngle:"自定义角度（°）", labelRadius:"弯曲半径 (R)", labelRadiusNote:"段数",
         labelSecondary:"副桥架宽度 — T形", labelObstacle:"障碍物尺寸",
         labelD:"偏移量 (D)", labelL:"长度 (L)", labelDist:"切割间距", labelObsCustom:"转角后障碍物（可选）", labelObsCustomNote:"障碍物深度 (D)", dimPosCut:"切割位置 (V)", dimDispo:"可用长度", dimObsTooClose:"⚠️ 障碍物太近",
         legendCut:"切割区域", legendTab:"搭接片（勿切）", legendFold:"折弯轴",
@@ -1272,7 +1278,7 @@ const T = {
         ddDarkLabel:"深色模式", ddContactLabel:"联系我们", ddTutoLabel:"重播教程",
         blockHoriz:"水平弯头", blockVert:"垂直弯头",
         blockObs:"绕障", blockTe:"T形分支",
-        selHoriz:["简单90°","宽90°(2×45°)","自定义"],
+        selHoriz:["简单90°","宽90°(2×45°)","自定义","弧形(半径)"],
         selVert:["上升90°","上升2×45°","自定义上升","下降90°","下降2×45°","自定义下降"],
         selObs:["水平障碍","垂直绕障","水平偏移 (2×45°)","垂直偏移 (2×45°)"],
         selTe:["水平T形"],
@@ -1303,7 +1309,7 @@ const T = {
         titleParams:"パラメータ", titlePreview:"完成形プレビュー",
         titlePlan:"切断図", titleSteps:"作業手順",
         labelDims:"メインラック寸法",
-        labelW:"幅 (W)", labelH:"高さ (H)", labelAngle:"カスタム角度（°）",
+        labelW:"幅 (W)", labelH:"高さ (H)", labelAngle:"カスタム角度（°）", labelRadius:"曲げ半径 (R)", labelRadiusNote:"セグメント",
         labelSecondary:"サブラック幅 — T字", labelObstacle:"障害物寸法",
         labelD:"オフセット (D)", labelL:"長さ (L)", labelDist:"切断間距離", labelObsCustom:"角度後の障害物（任意）", labelObsCustomNote:"障害物の深さ (D)", dimPosCut:"切断位置 (V)", dimDispo:"利用可能な長さ", dimObsTooClose:"⚠️ 障害物が近すぎます",
         legendCut:"切断ゾーン", legendTab:"重ねタブ（切断禁止）", legendFold:"折り曲げ軸",
@@ -1311,7 +1317,7 @@ const T = {
         ddDarkLabel:"ダークモード", ddContactLabel:"お問い合わせ", ddTutoLabel:"チュートリアルを再生",
         blockHoriz:"水平曲げ", blockVert:"垂直曲げ",
         blockObs:"迂回", blockTe:"T字分岐",
-        selHoriz:["単純90°","広幅90°(2×45°)","カスタム"],
+        selHoriz:["単純90°","広幅90°(2×45°)","カスタム","カーブ(半径)"],
         selVert:["上昇90°","上昇2×45°","カスタム上昇","下降90°","下降2×45°","カスタム下降"],
         selObs:["水平障害物","垂直迂回","水平オフセット (2×45°)","垂直オフセット (2×45°)"],
         selTe:["水平T字"],
@@ -1342,7 +1348,7 @@ const T = {
         titleParams:"المعاملات", titlePreview:"معاينة",
         titlePlan:"مخطط التحديد", titleSteps:"طريقة التنفيذ",
         labelDims:"أبعاد القناة الرئيسية",
-        labelW:"العرض (W)", labelH:"الارتفاع (H)", labelAngle:"زاوية مخصصة (°)",
+        labelW:"العرض (W)", labelH:"الارتفاع (H)", labelAngle:"زاوية مخصصة (°)", labelRadius:"نصف قطر الانحناء (R)", labelRadiusNote:"الأجزاء",
         labelSecondary:"عرض القناة الثانوية — T", labelObstacle:"أبعاد العائق",
         labelD:"الإزاحة (D)", labelL:"الطول (L)", labelDist:"المسافة بين القطعتين",
         labelObsCustom:"عائق بعد الزاوية (اختياري)", labelObsCustomNote:"عمق العائق (D)",
@@ -1352,7 +1358,7 @@ const T = {
         ddDarkLabel:"الوضع المظلم", ddContactLabel:"اتصل بنا", ddTutoLabel:"إعادة البرنامج التعليمي",
         blockHoriz:"زاوية أفقية", blockVert:"زاوية عمودية",
         blockObs:"تجاوز العائق", blockTe:"تفرع T",
-        selHoriz:["90° بسيط","90° موسع (2×45°)","مخصص"],
+        selHoriz:["90° بسيط","90° موسع (2×45°)","مخصص","منحنى (نصف القطر)"],
         selVert:["صعود 90°","صعود 2×45°","صعود مخصص","نزول 90°","نزول 2×45°","نزول مخصص"],
         selObs:["عائق أفقي","قفز عمودي","إزاحة أفقية (2×45°)","إزاحة عمودية (2×45°)"],
         selTe:["T أفقي"],
@@ -1401,7 +1407,8 @@ function setLang(lang) {
         'title-params':tr.titleParams,'title-preview':tr.titlePreview,
         'title-plan':tr.titlePlan,'title-steps':tr.titleSteps,
         'label-dims':tr.labelDims,'label-W':tr.labelW,'label-H':tr.labelH,
-        'label-angle':tr.labelAngle,'label-secondary':tr.labelSecondary,
+        'label-angle':tr.labelAngle,'label-radius':tr.labelRadius,
+        'label-secondary':tr.labelSecondary,
         'label-obstacle':tr.labelObstacle,'label-D':tr.labelD,'label-L':tr.labelL,
         'label-dist':tr.labelDist,
         'label-obs-custom':tr.labelObsCustom,'label-obs-custom-note':tr.labelObsCustomNote,
@@ -1434,7 +1441,7 @@ function setLang(lang) {
         if (vals.includes(cur)) sel.value = cur;
     }
     rebuildSelect('sel-horiz',
-        ['horiz-1x90','horiz-2x45','horiz-custom'], tr.selHoriz);
+        ['horiz-1x90','horiz-2x45','horiz-custom','horiz-curve'], tr.selHoriz);
     rebuildSelect('sel-vert',
         ['montee-1x90','montee-2x45','montee-custom','descente-1x90','descente-2x45','descente-custom'], tr.selVert);
     rebuildSelect('sel-obs',
@@ -1469,19 +1476,28 @@ function updateApp() {
     const hRaw    = parseFloat(document.getElementById('height').value)||0;
     const w2Raw   = parseFloat(document.getElementById('width2').value)||0;
     const customA = parseFloat(document.getElementById('customAngle').value)||45;
-    // Clamp visuel : remet à 120 si l'utilisateur dépasse
     if (customA > 120) { document.getElementById('customAngle').value = 120; }
+    const radiusRaw = parseFloat(document.getElementById('radiusVal').value)||300;
     const obsDRaw = parseFloat(document.getElementById('obsD').value)||0;
     const obsLRaw = parseFloat(document.getElementById('obsL').value)||0;
     const distRaw = parseFloat(document.getElementById('distVal').value)||0;
     const obsCustomDRaw = parseFloat(document.getElementById('obsCustomD').value)||0;
     const w=toMM(wRaw), h=toMM(hRaw), w2=toMM(w2Raw), obsD=toMM(obsDRaw), obsL=toMM(obsLRaw), obsCustomD=toMM(obsCustomDRaw);
     let dist=toMM(distRaw);
+    const radius = toMM(radiusRaw);
+    // Nombre de segments pour la courbe : 1 segment tous les 15° minimum
+    const nSegments = figure==='horiz-curve' ? Math.max(2, Math.ceil(customA / 15)) : 1;
+    // Mise à jour label segments
+    if (figure==='horiz-curve') {
+        const tr2 = T[currentLang];
+        document.getElementById('label-radius-note').textContent = (tr2.labelRadiusNote||'Segments') + ' : ' + nSegments;
+    }
 
     document.getElementById('secondaryGroup').style.display = figure==='te-horizontal' ? 'block':'none';
     document.getElementById('obstacleGroup').style.display  = (figure==='obs-horiz'||figure==='obs-vert') ? 'block':'none';
-    document.getElementById('angleGroup').style.display     = figure.includes('custom')? 'block':'none';
-    document.getElementById('obsCustomGroup').style.display = figure.includes('custom') ? 'block':'none';
+    document.getElementById('angleGroup').style.display     = (figure==='horiz-custom'||figure==='horiz-curve'||figure.includes('custom')) ? 'block':'none';
+    document.getElementById('radiusGroup').style.display    = figure==='horiz-curve' ? 'block':'none';
+    document.getElementById('obsCustomGroup').style.display = (figure==='horiz-custom'||figure.includes('custom')&&figure!=='horiz-curve') ? 'block':'none';
     // Champ distance entre coupes : 2x45 horiz/vert + décalages
     const needDist = figure==='horiz-2x45'||figure==='montee-2x45'||figure==='descente-2x45'||figure==='dec-horiz'||figure==='dec-vert';
     document.getElementById('distGroup').style.display = needDist ? 'block':'none';
@@ -1523,8 +1539,8 @@ function updateApp() {
     }
 
     renderMiniature(figure,w,h,w2,obsD,obsL,angle,dist);
-    renderPlan(figure,w,h,w2,obsD,obsL,angle,dist);
-    renderDims(figure,w,h,w2,obsD,obsL,angle,dist,obsCustomD);
+    renderPlan(figure,w,h,w2,obsD,obsL,angle,dist,radius,nSegments);
+    renderDims(figure,w,h,w2,obsD,obsL,angle,dist,obsCustomD,radius,nSegments);
     // Gabarit 2 : uniquement pour le Té
     const plan2El = document.getElementById('plan2-container');
     if (figure==='te-horizontal') {
@@ -1538,7 +1554,7 @@ function updateApp() {
 // ═══════════════════════════════════════
 // ENCOMBREMENT APRÈS PLIAGE
 // ═══════════════════════════════════════
-function renderDims(figure,w,h,w2,obsD,obsL,angle,dist,obsCustomD=0) {
+function renderDims(figure,w,h,w2,obsD,obsL,angle,dist,obsCustomD=0,radius=300,nSegments=1) {
     const tr = T[currentLang], ul = unitLabel();
     const el = document.getElementById('dims-content');
 
@@ -1566,6 +1582,20 @@ function renderDims(figure,w,h,w2,obsD,obsL,angle,dist,obsCustomD=0) {
             const dispo = obsCustomD - w;
             html += row(tr.dimDispo, dispo >= 0 ? f(dispo) : tr.dimObsTooClose);
         }
+
+    } else if (figure==='horiz-curve') {
+        // Arc de cercle : longueur développée = R × angle_rad
+        const arcLen = radius * (angle * Math.PI / 180);
+        // Espacement entre segments = arcLen / nSegments
+        const segSpacing = arcLen / nSegments;
+        // V de chaque segment = W × tan(segAngle/2)
+        const segAngle = angle / nSegments;
+        const Vseg = w * Math.tan(segAngle/2 * Math.PI/180);
+        html += row('R (rayon)', f(radius));
+        html += row('Segments', nSegments + ' × ' + fmtVal(segAngle.toFixed(1)) + '°');
+        html += row('V par segment', f(Vseg));
+        html += row('Espacement', f(segSpacing));
+        html += row('Développé total', f(arcLen));
 
     } else if (figure==='dec-horiz') {
         const d = dist>0 ? dist : w*1.5;
@@ -1631,6 +1661,21 @@ function renderMiniature(figure,w,h,w2,obsD,obsL,angle,dist) {
     if (figure.includes('horiz-1x90'))       { svg+=`<path d="M 40 120 L 140 120 L 140 20 L 100 20 L 100 80 L 40 80 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; dimLine(100,140,148,`W=${wD}${ul}`); }
     else if (figure.includes('horiz-2x45'))  { svg+=`<path d="M 30 120 L 130 120 L 200 55 L 200 15 L 160 15 L 160 50 L 115 95 L 30 95 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; }
     else if (figure.includes('horiz-custom')){ svg+=`<path d="M 35 120 L 135 120 L 215 65 L 185 20 L 105 70 L 35 70 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; dimLine(105,185,148,`α=${angle}°`); }
+    else if (figure==='horiz-curve') {
+        // Courbe approximée par des segments
+        const n = Math.max(2, Math.ceil(angle/15));
+        const rad = angle * Math.PI / 180;
+        const cx = 220, cy = 120, r2 = 80;
+        let pts = '';
+        for (let i=0; i<=n; i++) {
+            const a = -Math.PI/2 + (rad/n)*i;
+            pts += `${cx + r2*Math.cos(a)},${cy + r2*Math.sin(a)} `;
+        }
+        svg+=`<path d="M 35 120 L ${cx+r2*Math.cos(-Math.PI/2)} ${cy+r2*Math.sin(-Math.PI/2)}" fill="none" stroke="${BLUE}" stroke-width="3"/>`;
+        svg+=`<polyline points="${pts}" fill="none" stroke="${BLUE}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+        svg+=`<rect x="30" y="108" width="130" height="24" rx="4" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`;
+        dimLine(35,135,148,`α=${angle}° R=${fmtVal(radius)}${ul}`);
+    }
     else if (figure==='te-horizontal')       { svg+=`<path d="M 40 100 L 360 100 L 360 65 L 215 65 L 215 20 L 185 20 L 185 65 L 40 65 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; dimLine(185,215,130,`W2=${w2D}${ul}`); }
     else if (figure.includes('montee-1x90')) { svg+=`<path d="M 35 115 L 135 115 L 135 15 L 105 15 L 105 85 L 35 85 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; dimLine(105,135,145,`H=${hD}${ul}`); }
     else if (figure.includes('montee-2x45')) { svg+=`<path d="M 35 115 L 135 115 L 200 55 L 200 10 L 170 10 L 170 50 L 120 90 L 35 90 Z" fill="${fillColor}" stroke="${BLUE}" stroke-width="2"/>`; }
@@ -1649,7 +1694,7 @@ function renderMiniature(figure,w,h,w2,obsD,obsL,angle,dist) {
 // ═══════════════════════════════════════
 // GABARIT
 // ═══════════════════════════════════════
-function renderPlan(figure,w,h,w2,obsD,obsL,angle,dist) {
+function renderPlan(figure,w,h,w2,obsD,obsL,angle,dist,radius=300,nSegments=1) {
     try {
     const tr=T[currentLang], ul=unitLabel();
     const BLUE='#0284c7', LBLUE='#38bdf8';
@@ -1688,6 +1733,10 @@ function renderPlan(figure,w,h,w2,obsD,obsL,angle,dist) {
     else if (figure==='horiz-2x45') { const d=dist>0?dist:w*1.5; L_TOTAL=Math.max(700,240+d*scale*2); }
     else if (figure==='montee-2x45'||figure==='descente-2x45') { const d=dist>0?dist:h*2; L_TOTAL=Math.max(700,240+d*scale*2); }
     else if (figure==='dec-horiz'||figure==='dec-vert') { const d=dist>0?dist:w*1.5; L_TOTAL=Math.max(700,240+d*scale*2); }
+    else if (figure==='horiz-curve') {
+        const arcLen = radius * (angle * Math.PI / 180);
+        L_TOTAL = Math.max(800, 150 + arcLen*scale + 150);
+    }
 
     const bgColor = darkMode ? '#0c1a2e' : '#f0f9ff';
     const bgBorder = darkMode ? '#1e3a5f' : '#bae6fd';
@@ -1820,6 +1869,28 @@ function renderPlan(figure,w,h,w2,obsD,obsL,angle,dist) {
 
     const c=L_TOTAL/2;
     if (figure==='horiz-1x90'||figure==='horiz-custom') { drawHorizCut(c,'top',false,angle,true); }
+    else if (figure==='horiz-curve') {
+        // Courbe = n segments de V réguliers espacés selon l'arc
+        const segAngle = angle / nSegments;
+        const arcLen = radius * (angle * Math.PI / 180);
+        const segSpacing = (arcLen / nSegments) * scale;
+        const totalWidth = segSpacing * nSegments;
+        const xStart = c - totalWidth/2;
+        for (let i=0; i<nSegments; i++) {
+            const xPos = xStart + segSpacing*i + segSpacing/2;
+            // Côté de la patte alternée pour lisibilité
+            const isLeft = (i % 2 === 0);
+            drawHorizCut(xPos, 'top', isLeft, segAngle, true);
+        }
+        // Cote espacement entre segments
+        if (nSegments > 1) {
+            const x0 = xStart + segSpacing/2;
+            const x1 = xStart + segSpacing*3/2;
+            drawDimArrow(x0, x1, yEnd+60, `e = ${fmtVal(arcLen/nSegments)} ${ul}`);
+        }
+        // Cote développé total
+        drawDimArrow(xStart + segSpacing/2, xStart + segSpacing*nSegments - segSpacing/2, yEnd+80, `Arc = ${fmtVal(arcLen)} ${ul}`);
+    }
     else if (figure==='horiz-2x45') { const d=dist>0?dist:w*1.5,sD=d*scale; drawHorizCut(c-sD/2,'top',true,45,true); drawHorizCut(c+sD/2,'top',false,45,true); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
     else if (figure==='dec-horiz')  { const d=dist>0?dist:w*1.5,sD=d*scale; drawHorizCut(c-sD/2,'top',true,45,true); drawHorizCut(c+sD/2,'bottom',true,45,true); drawDimArrow(c-sD/2,c+sD/2,yEnd+40,`D = ${fmtVal(d)} ${ul}`); }
     else if (figure==='te-horizontal') {
